@@ -1,8 +1,10 @@
 package com.dailycodework.dreamshops.controller;
 
+import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.category.CreateCategoryReq;
 import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
 import com.dailycodework.dreamshops.service.category.CategoryService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +21,8 @@ public class CategoryController {
     }
 
     @PostMapping("/category/create")
-    public void createCategory(@RequestBody CreateCategoryReq categoryReq) {
-        this.categoryService.createCategory(categoryReq);
+    public ResponseEntity<BaseResultDTO> createCategory(@RequestBody CreateCategoryReq categoryReq) {
+        return ResponseEntity.ok().body(categoryService.createCategory(categoryReq));
     }
 
 }

@@ -14,9 +14,10 @@ public class BaseResultDTO {
     public BaseResultDTO() {
     }
 
-    public BaseResultDTO(Object message, String reason) {
+    public BaseResultDTO(Object message, boolean status, Object data) {
         this.message = message;
-        this.reason = reason;
+        this.status = status;
+        this.data = data;
     }
 
     public BaseResultDTO(Object message, String reason, boolean status) {
