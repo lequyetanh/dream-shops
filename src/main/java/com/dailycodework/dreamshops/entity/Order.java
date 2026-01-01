@@ -29,4 +29,6 @@ public class Order {
     private BigDecimal totalAmount;
     @Column(name = "company_id")
     private Long companyId;
+    private Integer Status;
+    private String extra;
 }

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateCategoryReq {
+public class CategroyInfo {
     private String name;
     private String description;
 }

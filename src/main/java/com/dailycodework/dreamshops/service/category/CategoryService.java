@@ -2,10 +2,11 @@ package com.dailycodework.dreamshops.service.category;
 
 import com.dailycodework.dreamshops.constant.ResultNotify;
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.category.CreateCategoryReq;
-import com.dailycodework.dreamshops.dto.category.GetCategoryWithPaging;
+import com.dailycodework.dreamshops.dto.category.CategroyInfo;
+import com.dailycodework.dreamshops.dto.category.GetCategoryWithPagingRes;
 import com.dailycodework.dreamshops.entity.Category;
 import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,25 @@ public class CategoryService implements ICategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public BaseResultDTO createCategory(CreateCategoryReq categoryReq) {
+    @Override
+    public BaseResultDTO getCategoryWithPaging(
+            Pageable pageable,
+            String keyword
+    ) {
+        List<Category> listCategory = categoryRepository.findAll();
+        return new BaseResultDTO(
+                ResultNotify.successCreate,
+                true,
+                listCategory
+        );
+    }
+
+    @Override
+    public BaseResultDTO findById(Long id){
+        return null;
+    }
+
+    public BaseResultDTO createCategory(CategroyInfo categoryReq) {
         Category category = new Category();
         category.setName(categoryReq.getName());
         category.setDescription(categoryReq.getDescription());
@@ -31,22 +50,12 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public BaseResultDTO updateCategory(CreateCategoryReq categoryReq) {
+    public BaseResultDTO updateCategory(CategroyInfo categoryReq) {
         return null;
     }
 
     @Override
-    public BaseResultDTO deleteCategory(CreateCategoryReq categoryReq) {
+    public BaseResultDTO deleteCategory(Long id) {
         return null;
-    }
-
-    @Override
-    public BaseResultDTO getCategoryWithPaging(GetCategoryWithPaging categoryReq) {
-        List<Category> listCategory = categoryRepository.findAll();
-        return new BaseResultDTO(
-                ResultNotify.successCreate,
-                true,
-                listCategory
-        );
     }
 }

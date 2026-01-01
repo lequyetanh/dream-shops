@@ -1,12 +1,16 @@
 package com.dailycodework.dreamshops.service.category;
 
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.category.CreateCategoryReq;
-import com.dailycodework.dreamshops.dto.category.GetCategoryWithPaging;
+import com.dailycodework.dreamshops.dto.category.CategroyInfo;
+import org.springframework.data.domain.Pageable;
 
 public interface ICategoryService {
-    public BaseResultDTO createCategory(CreateCategoryReq categoryReq);
-    public BaseResultDTO updateCategory(CreateCategoryReq categoryReq);
-    public BaseResultDTO deleteCategory(CreateCategoryReq categoryReq);
-    public BaseResultDTO getCategoryWithPaging(GetCategoryWithPaging categoryReq);
+    public BaseResultDTO getCategoryWithPaging(
+            Pageable pageable,
+            String keyword
+    );
+    public BaseResultDTO findById(Long id);
+    public BaseResultDTO createCategory(CategroyInfo categoryReq);
+    public BaseResultDTO updateCategory(CategroyInfo categoryReq);
+    public BaseResultDTO deleteCategory(Long id);
 }
