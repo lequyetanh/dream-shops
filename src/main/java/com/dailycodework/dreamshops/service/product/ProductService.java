@@ -15,7 +15,7 @@ public class ProductService implements IProductService{
     public final IProductRepository productRepository;
 
     @Override
-    public BaseResultDTO getProductWidthPaging(
+    public BaseResultDTO getProductWithPaging(
             Pageable pageable,
             String keyword,
             BigDecimal price

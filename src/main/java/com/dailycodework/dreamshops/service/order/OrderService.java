@@ -3,7 +3,6 @@ package com.dailycodework.dreamshops.service.order;
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.order.OrderInfo;
 import com.dailycodework.dreamshops.repository.order.IOrderRepository;
-import com.dailycodework.dreamshops.service.customer.ICustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,8 @@ public class OrderService implements IOrderService {
             String keyword,
             String fromDate,
             String toDate,
-            String OrderCode,
-            Integer Status
+            String orderCode,
+            Integer status
     ){
         return null;
     };

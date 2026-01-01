@@ -2,15 +2,13 @@ package com.dailycodework.dreamshops.controller;
 
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.category.CategroyInfo;
-import com.dailycodework.dreamshops.dto.category.GetCategoryWithPagingRes;
 import com.dailycodework.dreamshops.service.category.CategoryService;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/api")
 public class Category {
     private final CategoryService categoryService;
@@ -20,14 +18,40 @@ public class Category {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/category/get-with-paging")
-    public ResponseEntity<BaseResultDTO> getCategoryWithPaging(@RequestBody GetCategoryWithPagingRes categoryReq){
-        return ResponseEntity.ok().body(categoryService.getCategoryWithPaging(categoryReq));
+    @GetMapping("/category/get-with-paging")
+    public ResponseEntity<BaseResultDTO> getCategoryWithPaging(
+            @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+            @RequestParam(required = false) String keyword
+            ){
+        BaseResultDTO result = categoryService.getCategoryWithPaging(
+                pageable,
+                keyword
+        );
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/category/find-by-id/{id}")
+    public ResponseEntity<BaseResultDTO> findById(@PathVariable(value = "id") Long id){
+        BaseResultDTO result = categoryService.findById(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/category/create")
     public ResponseEntity<BaseResultDTO> createCategory(@RequestBody CategroyInfo categoryReq) {
-        return ResponseEntity.ok().body(categoryService.createCategory(categoryReq));
+        BaseResultDTO result = categoryService.createCategory(categoryReq);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/category/update")
+    public ResponseEntity<BaseResultDTO> updateCategory(@RequestBody CategroyInfo categoryReq){
+        BaseResultDTO result = categoryService.updateCategory(categoryReq);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/category/delete/{id}")
+    public ResponseEntity<BaseResultDTO> deleteCategory(@PathVariable(value = "id") Long id){
+        BaseResultDTO result = categoryService.deleteCategory(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
 
 public interface IProductService {
-    public BaseResultDTO getProductWidthPaging(
+    public BaseResultDTO getProductWithPaging(
             Pageable pageable,
             String keyword,
             BigDecimal price
