@@ -34,7 +34,15 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public BaseResultDTO findById(Long id){
-        return null;
+        String categoryName = categoryRepository.getNameById(id);
+        if(categoryName == null){
+            throw new RuntimeException("Không tìm thấy sanr phẩm");
+        }
+        return new BaseResultDTO(
+                ResultNotify.successCreate,
+                true,
+                categoryName
+        );
     }
 
     public BaseResultDTO createCategory(CategroyInfo categoryReq) {
