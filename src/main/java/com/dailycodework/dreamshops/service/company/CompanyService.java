@@ -2,6 +2,7 @@ package com.dailycodework.dreamshops.service.company;
 
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.company.CompanyInfo;
+import com.dailycodework.dreamshops.repository.company.ICompanyRepository;
 import com.dailycodework.dreamshops.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CompanyService implements ICompanyService {
-    final CompanyService companyService;
+    private final ICompanyRepository companyRepository;
 
     @Override
     public BaseResultDTO getCompanyWithPaging(
