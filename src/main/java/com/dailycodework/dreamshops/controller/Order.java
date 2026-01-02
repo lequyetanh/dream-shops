@@ -17,7 +17,7 @@ public class Order {
 
     @GetMapping("/category/get-with-paging")
     public ResponseEntity<BaseResultDTO> getOrderWithPaging(
-            @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+            Pageable pageable,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String fromDate,
             @RequestParam(required = false) String toDate,

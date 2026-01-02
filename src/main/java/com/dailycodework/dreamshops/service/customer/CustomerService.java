@@ -1,6 +1,7 @@
 package com.dailycodework.dreamshops.service.customer;
 
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.dto.customer.CustomerInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,12 @@ public class CustomerService implements ICustomerService{
     };
 
     @Override
-    public BaseResultDTO createCustomer (){
+    public BaseResultDTO createCustomer (CustomerInfo customerReq){
         return null;
     };
 
     @Override
-    public BaseResultDTO updateCustomer (){
+    public BaseResultDTO updateCustomer (CustomerInfo customerReq){
         return null;
     };
 

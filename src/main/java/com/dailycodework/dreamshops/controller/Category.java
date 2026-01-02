@@ -20,7 +20,7 @@ public class Category {
 
     @GetMapping("/category/get-with-paging")
     public ResponseEntity<BaseResultDTO> getCategoryWithPaging(
-            @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+            Pageable pageable,
             @RequestParam(required = false) String keyword
             ){
         BaseResultDTO result = categoryService.getCategoryWithPaging(

@@ -1,6 +1,7 @@
 package com.dailycodework.dreamshops.controller;
 
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.dto.customer.CustomerInfo;
 import com.dailycodework.dreamshops.service.customer.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,7 @@ public class Customer {
 
     @GetMapping("/customer/get-with-paging")
     public ResponseEntity<BaseResultDTO> getCustomerWithPaging(
-            @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+            Pageable pageable,
             @RequestParam(required = false) String keyword
     ){
         BaseResultDTO result = customerService.getCustomerWithPaging(

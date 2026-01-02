@@ -19,7 +19,7 @@ public class Product {
 
     @GetMapping("/product/get-with-paging")
     public ResponseEntity<BaseResultDTO> getProductWithPaging(
-            @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+            Pageable pageable,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) BigDecimal price
     ){

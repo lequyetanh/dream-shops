@@ -17,7 +17,7 @@ public class Company {
 
     @GetMapping("/company/get-with-paging")
     public ResponseEntity<BaseResultDTO> getCompanyWithPaging(
-            @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+            Pageable pageable,
             @RequestParam(required = false) String keyword
     ){
         BaseResultDTO result = companyService.getCompanyWithPaging(
