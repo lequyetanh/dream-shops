@@ -17,4 +17,5 @@ public class Company {
     private String website;
     @Column(name = "tax_code")
     private String taxCode;
+    private String password;
 }

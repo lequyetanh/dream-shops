@@ -2,6 +2,7 @@ package com.dailycodework.dreamshops.service.company;
 
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.company.CompanyInfo;
+import com.dailycodework.dreamshops.dto.company.UserLogin;
 import com.dailycodework.dreamshops.repository.company.ICompanyRepository;
 import com.dailycodework.dreamshops.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -36,4 +37,9 @@ public class CompanyService implements ICompanyService {
     public BaseResultDTO deleteCompany(Long id){
         return null;
     };
+
+    @Override
+    public BaseResultDTO login(UserLogin userLogin){
+        return null;
+    }
 }

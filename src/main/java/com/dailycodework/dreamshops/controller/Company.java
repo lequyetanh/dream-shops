@@ -2,6 +2,7 @@ package com.dailycodework.dreamshops.controller;
 
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.company.CompanyInfo;
+import com.dailycodework.dreamshops.dto.company.UserLogin;
 import com.dailycodework.dreamshops.service.company.CompanyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,12 @@ public class Company {
     @DeleteMapping("/company/delete/{id}")
     public ResponseEntity<BaseResultDTO> deleteCompany(@PathVariable(value = "id") Long id){
         BaseResultDTO result = companyService.deleteCompany(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/user/login")
+    public ResponseEntity<BaseResultDTO> loginCompany(@RequestBody UserLogin userLogin){
+        BaseResultDTO result = companyService.login(userLogin);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
