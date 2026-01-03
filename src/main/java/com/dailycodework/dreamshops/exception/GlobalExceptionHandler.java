@@ -1,5 +1,6 @@
 package com.dailycodework.dreamshops.exception;
 
+import com.dailycodework.dreamshops.dto.BaseBadRequestException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,18 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = RuntimeException.class)
-    ResponseEntity<String> handleException(RuntimeException ex){
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+    ResponseEntity<BaseBadRequestException> handleException(RuntimeException ex){
+        BaseBadRequestException apiResponse = new BaseBadRequestException();
+        apiResponse.setErrorKey(ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    ResponseEntity<String> handleException(MethodArgumentNotValidException ex){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getFieldError().getDefaultMessage());
+    ResponseEntity<BaseBadRequestException> handleException(MethodArgumentNotValidException ex){
+        BaseBadRequestException apiResponse = new BaseBadRequestException();
+        apiResponse.setErrorKey(ex.getFieldError().getDefaultMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

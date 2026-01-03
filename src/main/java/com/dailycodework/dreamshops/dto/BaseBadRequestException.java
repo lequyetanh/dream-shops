@@ -1,6 +1,12 @@
 package com.dailycodework.dreamshops.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@Getter
+@Setter
 public class BaseBadRequestException {
     String entityName;
     Object[] args;
@@ -13,7 +19,7 @@ public class BaseBadRequestException {
 
     private BaseBadRequestException(String entityName, String errorKey) {
         this.entityName = entityName;
-        this.args = args;
+        this.errorKey = errorKey;
     }
 
     private BaseBadRequestException(String entityName, String errorKey, Object[] args) {
