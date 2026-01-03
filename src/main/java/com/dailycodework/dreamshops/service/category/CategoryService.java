@@ -36,10 +36,10 @@ public class CategoryService implements ICategoryService {
     public BaseResultDTO findById(Long id){
         String categoryName = categoryRepository.getNameById(id);
         if(categoryName == null){
-            throw new RuntimeException("Không tìm thấy sanr phẩm");
+            throw new RuntimeException("Không tìm thấy sản phẩm");
         }
         return new BaseResultDTO(
-                ResultNotify.successCreate,
+                ResultNotify.successGet,
                 true,
                 categoryName
         );
