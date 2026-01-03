@@ -4,6 +4,7 @@ import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.company.CompanyInfo;
 import com.dailycodework.dreamshops.dto.company.UserLogin;
 import com.dailycodework.dreamshops.service.company.CompanyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -53,7 +54,7 @@ public class Company {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<BaseResultDTO> loginCompany(@RequestBody UserLogin userLogin){
+    public ResponseEntity<BaseResultDTO> loginCompany(@RequestBody @Valid UserLogin userLogin){
         BaseResultDTO result = companyService.login(userLogin);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

@@ -1,5 +1,6 @@
 package com.dailycodework.dreamshops.controller;
 
+import com.dailycodework.dreamshops.constant.ExceptionConstant;
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.category.CategroyInfo;
 import com.dailycodework.dreamshops.service.category.CategoryService;
@@ -7,10 +8,12 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
+@Validated
 public class Category {
     private final CategoryService categoryService;
     public Category(
@@ -32,7 +35,11 @@ public class Category {
     }
 
     @GetMapping("/category/find-by-id/{id}")
-    public ResponseEntity<BaseResultDTO> findById(@PathVariable(value = "id") @NotNull Long id){
+    public ResponseEntity<BaseResultDTO> findById(
+            @PathVariable(value = "id")
+            @NotNull(message = ExceptionConstant.ID_NOT_NULL)
+            Long id
+    ){
         BaseResultDTO result = categoryService.findById(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
