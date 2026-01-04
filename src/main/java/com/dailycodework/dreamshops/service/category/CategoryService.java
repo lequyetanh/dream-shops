@@ -53,7 +53,7 @@ public class CategoryService implements ICategoryService {
         return new BaseResultDTO(
                 ResultNotify.successCreate,
                 true,
-                category
+                null
         );
     }
 
