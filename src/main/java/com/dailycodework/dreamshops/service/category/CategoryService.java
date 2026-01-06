@@ -6,7 +6,9 @@ import com.dailycodework.dreamshops.dto.category.CategroyInfo;
 import com.dailycodework.dreamshops.dto.category.GetCategoryWithPagingRes;
 import com.dailycodework.dreamshops.entity.Category;
 import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +17,9 @@ import java.util.List;
 public class CategoryService implements ICategoryService {
     private final ICategoryRepository categoryRepository;
 
-    public CategoryService(ICategoryRepository categoryRepository) {
+    public CategoryService(
+            ICategoryRepository categoryRepository
+    ) {
         this.categoryRepository = categoryRepository;
     }
 
