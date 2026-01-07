@@ -28,7 +28,7 @@ public class RedisConfig {
         template.setConnectionFactory(connectionFactory);
         // Cấu hình key/value serializer nếu cần (ví dụ: Jackson2JsonRedisSerializer)
         template.setKeySerializer(new StringRedisSerializer());
-        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
 }
