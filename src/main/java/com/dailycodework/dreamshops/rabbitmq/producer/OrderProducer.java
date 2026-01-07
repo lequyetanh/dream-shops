@@ -1,12 +1,8 @@
 package com.dailycodework.dreamshops.rabbitmq.producer;
 
-import com.dailycodework.dreamshops.config.RabbitMQConfig;
 import com.dailycodework.dreamshops.dto.order.OrderInfo;
 import com.dailycodework.dreamshops.rabbitmq.RabbitMQProperties;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
