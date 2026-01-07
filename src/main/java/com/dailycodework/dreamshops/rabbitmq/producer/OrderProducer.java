@@ -17,7 +17,7 @@ public class OrderProducer {
         this.commonExchange = rabbitMqProperties.getProducer().getDirectExchange();
     }
 
-    public void checkInvoice(OrderInfo message) {
+    public void createOrderQueue(OrderInfo message) {
         String routingKey = rabbitMQProperties.getOrderPublish().getCreateOrderRoutingKey();
         rabbitTemplate.convertAndSend(commonExchange, routingKey, message);
     }
