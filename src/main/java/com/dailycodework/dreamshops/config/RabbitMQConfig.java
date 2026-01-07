@@ -27,7 +27,7 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding ngpInvoiceReplaceInvoiceBinding() {
+    public Binding createOrderBinding() {
         return BindingBuilder
                 .bind(createOrderQueue())
                 .to(directExchange())
