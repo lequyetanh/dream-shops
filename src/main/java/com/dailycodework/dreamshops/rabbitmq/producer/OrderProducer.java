@@ -1,6 +1,7 @@
 package com.dailycodework.dreamshops.rabbitmq.producer;
 
 import com.dailycodework.dreamshops.config.RabbitMQConfig;
+import com.dailycodework.dreamshops.dto.order.OrderInfo;
 import com.dailycodework.dreamshops.rabbitmq.RabbitMQProperties;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -9,25 +10,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
-@RequiredArgsConstructor
 public class OrderProducer {
     private final RabbitTemplate rabbitTemplate;
     private final RabbitMQProperties rabbitMQProperties;
     private final String commonExchange;
 
-//    public void sendMessage(String message) {
-//        rabbitTemplate.convertAndSend(
-//                RabbitMQConfig.EXCHANGE_NAME,
-//                RabbitMQConfig.ROUTING_KEY,
-//                message
-//        );
-//        System.out.println("Sent: " + message);
-//    }
+    public OrderProducer(RabbitMQProperties rabbitMqProperties, RabbitTemplate rabbitTemplate) {
+        this.rabbitMQProperties = rabbitMqProperties;
+        this.rabbitTemplate = rabbitTemplate;
+        this.commonExchange = rabbitMqProperties.getProducer().getDirectExchange();
+    }
 
-    public void checkInvoice(TaskLogIdEnqueueMessage message) {
-        log.debug("Begin to produce check invoice message: {}", message);
-        String routingKey = rabbitMqProperties.getNgoGiaPhatInvoice().getNgpCheckInvoiceRoutingKey();
-        rabbitTemplate.convertAndSend(commonExchange, routingKey, message.getTaskLogId());
+    public void checkInvoice(OrderInfo message) {
+        String routingKey = rabbitMQProperties.getOrderPublish().getCreateOrderRoutingKey();
+        rabbitTemplate.convertAndSend(commonExchange, routingKey, message);
     }
 }
