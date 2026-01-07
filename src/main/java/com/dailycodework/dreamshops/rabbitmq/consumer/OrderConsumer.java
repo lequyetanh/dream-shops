@@ -1,5 +1,6 @@
 package com.dailycodework.dreamshops.rabbitmq.consumer;
 
+import com.dailycodework.dreamshops.dto.order.OrderInfo;
 import com.dailycodework.dreamshops.service.order.OrderService;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,8 @@ public class OrderConsumer {
     private final OrderService orderService;
 
     @RabbitListener(queues = "create-order-queue")
-    public void handle(Object payload, Integer orderId, Channel channel, Message amqpMessage) {
+    public void handle(OrderInfo payload, Integer orderId, Channel channel, Message amqpMessage) {
         System.out.println("Handle message: " + payload);
+        orderService.createOrder(payload);
     }
 }

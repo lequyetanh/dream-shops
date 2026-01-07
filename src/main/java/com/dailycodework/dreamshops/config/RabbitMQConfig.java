@@ -26,6 +26,7 @@ public class RabbitMQConfig {
         return new DirectExchange(rabbitMqProperties.getProducer().getDirectExchange());
     }
 
+    // Thông báo với rabbit là exchange này, routing key này sẽ đưa message vào queue nào
     @Bean
     public Binding createOrderBinding() {
         return BindingBuilder

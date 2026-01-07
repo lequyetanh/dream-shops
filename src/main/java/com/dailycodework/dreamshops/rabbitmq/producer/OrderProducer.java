@@ -17,6 +17,7 @@ public class OrderProducer {
         this.commonExchange = rabbitMqProperties.getProducer().getDirectExchange();
     }
 
+    // Gửi message vào exchange với routing key tương ứng để tạo đơn hàng
     public void createOrderQueue(OrderInfo message) {
         String routingKey = rabbitMQProperties.getOrderPublish().getCreateOrderRoutingKey();
         rabbitTemplate.convertAndSend(commonExchange, routingKey, message);
