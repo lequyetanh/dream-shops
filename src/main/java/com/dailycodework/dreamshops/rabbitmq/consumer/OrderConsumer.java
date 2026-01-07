@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrderConsumer {
-    @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
-    public void handle(String message) {
-        System.out.println("Handle message: " + message);
-    }
+//    @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
+//    public void handle(String message) {
+//        System.out.println("Handle message: " + message);
+//    }
 }

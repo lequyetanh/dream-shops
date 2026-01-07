@@ -15,6 +15,7 @@ public class RabbitMQProperties {
     private String username;
     private String password;
 
+    private OrderPublish orderPublish;
     private Consumer consumer;
     private Producer producer;
 
