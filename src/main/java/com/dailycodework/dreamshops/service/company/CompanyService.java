@@ -6,7 +6,6 @@ import com.dailycodework.dreamshops.dto.company.CompanyInfo;
 import com.dailycodework.dreamshops.dto.company.UserLogin;
 import com.dailycodework.dreamshops.entity.Company;
 import com.dailycodework.dreamshops.repository.company.ICompanyRepository;
-import com.dailycodework.dreamshops.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

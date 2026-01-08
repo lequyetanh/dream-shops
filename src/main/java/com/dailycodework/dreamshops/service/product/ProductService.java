@@ -1,13 +1,17 @@
 package com.dailycodework.dreamshops.service.product;
 
+import com.dailycodework.dreamshops.constant.ResultNotify;
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.product.ProductInfo;
+import com.dailycodework.dreamshops.entity.Product;
 import com.dailycodework.dreamshops.repository.product.IProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,21 +29,48 @@ public class ProductService implements IProductService{
 
     @Override
     public BaseResultDTO findById(Long id){
-        return null;
+        Optional<Product> product = productRepository.findById(id);
+        if(product.isEmpty()){
+            throw new RuntimeException("Không tìm thấy sản phẩm");
+        }
+        return new BaseResultDTO(
+                ResultNotify.successGet,
+                true,
+                product.get()
+        );
     };
 
     @Override
     public BaseResultDTO createProduct(ProductInfo productReq){
-        return null;
+        Product product = new Product();
+        BeanUtils.copyProperties(productReq,product);
+        productRepository.save(product);
+        return new BaseResultDTO(
+                ResultNotify.successCreate,
+                true,
+                product
+        );
     };
 
     @Override
     public BaseResultDTO updateProduct(ProductInfo productReq){
-        return null;
+        Product product = new Product();
+        BeanUtils.copyProperties(productReq,product);
+        productRepository.save(product);
+        return new BaseResultDTO(
+                ResultNotify.successCreate,
+                true,
+                product
+        );s
     };
 
     @Override
     public BaseResultDTO deleteProduct(Long id){
-        return null;
+        productRepository.deleteById(id);
+        return new BaseResultDTO(
+                ResultNotify.successDelete,
+                true,
+                null
+        );
     };
 }
