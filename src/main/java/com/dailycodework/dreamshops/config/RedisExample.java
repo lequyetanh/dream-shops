@@ -10,7 +10,6 @@ public class RedisExample implements CommandLineRunner {
     private final RedisTemplate<String, Object> redisTemplate;
 
     public RedisExample(
-            @Qualifier("redisTemplate")
             RedisTemplate<String, Object> redisTemplate
     ) {
         this.redisTemplate = redisTemplate;

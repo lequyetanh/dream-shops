@@ -1,11 +1,9 @@
 package com.dailycodework.dreamshops.dto.category;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-public class CategroyInfo {
+@Data
+public class CategoryInfo {
     private String name;
     private String description;
 }

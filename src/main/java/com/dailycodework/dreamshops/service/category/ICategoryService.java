@@ -1,7 +1,7 @@
 package com.dailycodework.dreamshops.service.category;
 
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.category.CategroyInfo;
+import com.dailycodework.dreamshops.dto.category.CategoryInfo;
 import org.springframework.data.domain.Pageable;
 
 public interface ICategoryService {
@@ -10,7 +10,7 @@ public interface ICategoryService {
             String keyword
     );
     public BaseResultDTO findById(Long id);
-    public BaseResultDTO createCategory(CategroyInfo categoryReq);
-    public BaseResultDTO updateCategory(CategroyInfo categoryReq);
+    public BaseResultDTO createCategory(CategoryInfo categoryReq);
+    public BaseResultDTO updateCategory(CategoryInfo categoryReq);
     public BaseResultDTO deleteCategory(Long id);
 }

@@ -2,7 +2,7 @@ package com.dailycodework.dreamshops.controller;
 
 import com.dailycodework.dreamshops.constant.ExceptionConstant;
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.category.CategroyInfo;
+import com.dailycodework.dreamshops.dto.category.CategoryInfo;
 import com.dailycodework.dreamshops.service.category.CategoryService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Pageable;
@@ -45,13 +45,13 @@ public class Category {
     }
 
     @PostMapping("/category/create")
-    public ResponseEntity<BaseResultDTO> createCategory(@RequestBody CategroyInfo categoryReq) {
+    public ResponseEntity<BaseResultDTO> createCategory(@RequestBody CategoryInfo categoryReq) {
         BaseResultDTO result = categoryService.createCategory(categoryReq);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/category/update")
-    public ResponseEntity<BaseResultDTO> updateCategory(@RequestBody CategroyInfo categoryReq){
+    public ResponseEntity<BaseResultDTO> updateCategory(@RequestBody CategoryInfo categoryReq){
         BaseResultDTO result = categoryService.updateCategory(categoryReq);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

@@ -61,7 +61,7 @@ public class ProductService implements IProductService{
                 ResultNotify.successCreate,
                 true,
                 product
-        );s
+        );
     };
 
     @Override
