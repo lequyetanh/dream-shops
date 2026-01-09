@@ -9,8 +9,9 @@ import java.math.BigDecimal;
 public interface IProductService {
     public BaseResultDTO getProductWithPaging(
             Pageable pageable,
-            String keyword,
-            BigDecimal price
+            String sort,
+            Integer companyId,
+            String keyword
     );
     public BaseResultDTO findById(Long id);
     public BaseResultDTO createProduct(ProductInfo productReq);

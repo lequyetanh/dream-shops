@@ -3,14 +3,19 @@ package com.dailycodework.dreamshops.service.product;
 import com.dailycodework.dreamshops.constant.ResultNotify;
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.product.ProductInfo;
+import com.dailycodework.dreamshops.dto.product.ProductResponse;
 import com.dailycodework.dreamshops.entity.Product;
 import com.dailycodework.dreamshops.repository.product.IProductRepository;
+import com.dailycodework.dreamshops.repository.product.ProductRepositoryCustomImplement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,10 +26,21 @@ public class ProductService implements IProductService{
     @Override
     public BaseResultDTO getProductWithPaging(
             Pageable pageable,
-            String keyword,
-            BigDecimal price
+            String sort,
+            Integer companyId,
+            String keyword
     ){
-        return null;
+        Page<ProductResponse> productResponses = productRepository.getWithPaging(
+                pageable,
+                sort,
+                companyId,
+                keyword
+        );
+        return new BaseResultDTO(
+                ResultNotify.successGet,
+                true,
+                productResponses
+        );
     };
 
     @Override

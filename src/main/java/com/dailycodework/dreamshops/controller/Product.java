@@ -21,12 +21,15 @@ public class Product {
     public ResponseEntity<BaseResultDTO> getProductWithPaging(
             Pageable pageable,
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) BigDecimal price
+            @RequestParam(required = false) BigDecimal price,
+            @RequestParam(required = false) Integer companyId,
+            @RequestParam(required = false) String sort
     ){
         BaseResultDTO result = productService.getProductWithPaging(
                 pageable,
-                keyword,
-                price
+                sort,
+                companyId,
+                keyword
         );
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
