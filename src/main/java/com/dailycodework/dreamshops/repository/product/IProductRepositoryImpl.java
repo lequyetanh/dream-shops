@@ -30,12 +30,12 @@ public class IProductRepositoryImpl implements ProductRepositoryCustom {
         List<ProductResponse> productResponses = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append(" from Product p ");
+        sql.append(" from product p ");
         if(keyword != null && !keyword.isEmpty()){
-            sql.append(" where p.companyId = :companyId and ( p.productName like :keyword or p.productCode like :keyword ) ");
+            sql.append(" where p.company_id = :companyId and ( p.product_name like :keyword or p.product_code like :keyword ) ");
             params.put("keyword", "%" + keyword + "%");
         } else {
-            sql.append(" where p.companyId = :companyId ");
+            sql.append(" where p.company_id = :companyId ");
         }
         params.put("companyId", companyId);
         if(sort != null && !sort.isEmpty()){
