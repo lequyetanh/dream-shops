@@ -4,20 +4,21 @@ import com.dailycodework.dreamshops.dto.product.ProductResponse;
 import com.dailycodework.dreamshops.util.Common;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
-public class ProductRepositoryCustomImplement implements ProductRepositoryCustom {
-    private EntityManager entityManager;
+@Component
+@RequiredArgsConstructor
+public class IProductRepositoryImpl implements ProductRepositoryCustom {
+    private final EntityManager entityManager;
 
     @Override
     public Page<ProductResponse> getWithPaging(

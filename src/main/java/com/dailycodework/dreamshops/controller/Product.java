@@ -2,6 +2,7 @@ package com.dailycodework.dreamshops.controller;
 
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.product.ProductInfo;
+import com.dailycodework.dreamshops.service.product.IProductService;
 import com.dailycodework.dreamshops.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class Product {
-    private final ProductService productService;
+    private final IProductService productService;
 
     @GetMapping("/product/get-with-paging")
     public ResponseEntity<BaseResultDTO> getProductWithPaging(

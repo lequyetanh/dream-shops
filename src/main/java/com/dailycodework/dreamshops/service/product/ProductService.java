@@ -6,16 +6,12 @@ import com.dailycodework.dreamshops.dto.product.ProductInfo;
 import com.dailycodework.dreamshops.dto.product.ProductResponse;
 import com.dailycodework.dreamshops.entity.Product;
 import com.dailycodework.dreamshops.repository.product.IProductRepository;
-import com.dailycodework.dreamshops.repository.product.ProductRepositoryCustomImplement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
