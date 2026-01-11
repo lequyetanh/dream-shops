@@ -8,10 +8,15 @@
 
 spring:
   datasource:
-    url: jdbc:sqlserver://10.100.110.78:1433;databaseName=dream_test;encrypt=true;trustServerCertificate=true;
-    username: sa
-    password: Sds@123
+    url: jdbc:sqlserver://localhost:1433;databaseName=dreamShop;encrypt=true;trustServerCertificate=true;
+    username: dream_user
+    password: 123456
     type: com.microsoft.sqlserver.jdbc.SQLServerDataSource
+#  datasource:
+#    url: jdbc:sqlserver://10.100.110.78:1433;databaseName=dream_test;encrypt=true;trustServerCertificate=true;
+#    username: sa
+#    password: Sds@123
+#    type: com.microsoft.sqlserver.jdbc.SQLServerDataSource
   data:
     redis:
       host: 10.100.140.9
