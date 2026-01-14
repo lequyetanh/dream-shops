@@ -1,5 +1,6 @@
 package com.dailycodework.dreamshops.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -12,8 +13,6 @@ public class OrderProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "order_id")
-    private Long OrderId;
     @Column(name = "product_id")
     private Long productId;
     @Column(name = "product_name")
@@ -28,4 +27,9 @@ public class OrderProduct {
     private BigDecimal vatAmount;
     @Column(name = "total_price")
     private BigDecimal totalPrice;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "order_id", nullable = false, referencedColumnName = "id")
+    @JsonBackReference
+    private Order order;
 }

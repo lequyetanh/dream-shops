@@ -1,9 +1,11 @@
 package com.dailycodework.dreamshops.dto.order;
 
+import com.dailycodework.dreamshops.dto.orderProduct.OrderProductReq;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Data
 public class OrderInfo {
@@ -18,4 +20,5 @@ public class OrderInfo {
     private BigDecimal totalAmount;
     private Long companyId;
     private String extra;
+    List<OrderProductReq> orderProductList;
 }

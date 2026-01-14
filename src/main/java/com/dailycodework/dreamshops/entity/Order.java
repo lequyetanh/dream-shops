@@ -1,10 +1,12 @@
 package com.dailycodework.dreamshops.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -29,6 +31,10 @@ public class Order {
     private BigDecimal totalAmount;
     @Column(name = "company_id")
     private Long companyId;
-    private Integer Status;
+    private Integer status;
     private String extra;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<OrderProduct> products;
 }

@@ -19,15 +19,15 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) {
         // @formatter:off
-        http.authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/category", "/product", "/api/**").permitAll()
+        http.csrf(csrf -> csrf.disable()).authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated()
-                )
-                .formLogin((form) -> form
-                        .loginPage("/login")
-                        .permitAll()
-                )
-                .logout(LogoutConfigurer::permitAll);
+                );
+//                .formLogin((form) -> form
+//                        .loginPage("/login")
+//                        .permitAll()
+//                )
+//                .logout(LogoutConfigurer::permitAll);
         // @formatter:on
 
         return http.build();
