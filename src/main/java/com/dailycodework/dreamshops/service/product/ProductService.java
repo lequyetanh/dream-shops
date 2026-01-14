@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,12 +28,14 @@ public class ProductService implements IProductService{
             Integer companyId,
             String keyword
     ){
-        Page<ProductResponse> productResponses = productRepository.getWithPaging(
+        List<ProductResponse> productResponses = new ArrayList<>();
+        Page<ProductResponse> productList = productRepository.getWithPaging(
                 pageable,
                 sort,
                 companyId,
                 keyword
         );
+        productResponses = productList.getContent();
         return new BaseResultDTO(
                 ResultNotify.successGet,
                 true,

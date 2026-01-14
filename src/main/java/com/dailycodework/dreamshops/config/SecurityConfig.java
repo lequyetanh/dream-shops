@@ -20,7 +20,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) {
         // @formatter:off
         http.authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/category", "/product", "order").permitAll()
+                        .requestMatchers("/", "/category", "/product", "/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
