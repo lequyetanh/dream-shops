@@ -1,5 +1,6 @@
 package com.dailycodework.dreamshops.service.order;
 
+import com.dailycodework.dreamshops.constant.ResultNotify;
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.order.OrderInfo;
 import com.dailycodework.dreamshops.dto.orderProduct.OrderProductReq;
@@ -49,7 +50,11 @@ public class OrderService implements IOrderService {
         BeanUtils.copyProperties(orderReq,order);
         order.setProducts(productList);
         orderRepository.save(order);
-        return null;
+        return new BaseResultDTO(
+                ResultNotify.successCreate,
+                true,
+                order
+        );
     };
 
     @Override
@@ -59,6 +64,11 @@ public class OrderService implements IOrderService {
 
     @Override
     public BaseResultDTO deleteOrder(Long id){
-        return null;
+        orderRepository.deleteById(id);
+        return new BaseResultDTO(
+                ResultNotify.successDelete,
+                true,
+                null
+        );
     };
 }
