@@ -18,8 +18,8 @@ public class OrderProducer {
     }
 
     // Gửi message vào exchange với routing key tương ứng để tạo đơn hàng
-    public void createOrderQueue(OrderInfo message) {
+    public void createOrderQueue(Long orderId) {
         String routingKey = rabbitMQProperties.getOrderPublish().getCreateOrderRoutingKey();
-        rabbitTemplate.convertAndSend(commonExchange, routingKey, message);
+        rabbitTemplate.convertAndSend(commonExchange, routingKey, orderId);
     }
 }

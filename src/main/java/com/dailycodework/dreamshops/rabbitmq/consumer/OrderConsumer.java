@@ -15,8 +15,8 @@ public class OrderConsumer {
     private final OrderService orderService;
 
     @RabbitListener(queues = "create-order-queue")
-    public void handle(OrderInfo payload, Integer orderId, Channel channel, Message amqpMessage) {
-        System.out.println("Handle message: " + payload);
-        orderService.createOrder(payload);
+    public void handle(Message message, Integer orderId, Channel channel) {
+        System.out.println("Handle message: " + orderId);
+//        orderService.createOrder(orderId);
     }
 }
