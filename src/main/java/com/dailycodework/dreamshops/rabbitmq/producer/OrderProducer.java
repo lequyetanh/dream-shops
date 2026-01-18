@@ -1,0 +1,25 @@
+package com.dailycodework.dreamshops.rabbitmq.producer;
+
+import com.dailycodework.dreamshops.dto.order.OrderInfo;
+import com.dailycodework.dreamshops.rabbitmq.RabbitMQProperties;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.stereotype.Service;
+
+@Service
+public class OrderProducer {
+    private final RabbitTemplate rabbitTemplate;
+    private final RabbitMQProperties rabbitMQProperties;
+    private final String commonExchange;
+
+    public OrderProducer(RabbitMQProperties rabbitMqProperties, RabbitTemplate rabbitTemplate) {
+        this.rabbitMQProperties = rabbitMqProperties;
+        this.rabbitTemplate = rabbitTemplate;
+        this.commonExchange = rabbitMqProperties.getProducer().getDirectExchange();
+    }
+
+    // Gửi message vào exchange với routing key tương ứng để tạo đơn hàng
+    public void createOrderQueue(Long orderId) {
+        String routingKey = rabbitMQProperties.getOrderPublish().getCreateOrderRoutingKey();
+        rabbitTemplate.convertAndSend(commonExchange, routingKey, orderId);
+    }
+}
