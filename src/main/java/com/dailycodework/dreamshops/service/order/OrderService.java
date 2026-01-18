@@ -11,6 +11,7 @@ import com.dailycodework.dreamshops.rabbitmq.producer.OrderProducer;
 import com.dailycodework.dreamshops.repository.order.IOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,21 @@ public class OrderService implements IOrderService {
             String orderCode,
             Integer status
     ){
-        return null;
+        List<OrderInfo> orderResponse = new ArrayList<>();
+        Page<OrderInfo> orderList = orderRepository.getOrdersWithPaging(
+                pageable,
+                keyword,
+                fromDate,
+                toDate,
+                orderCode,
+                status
+        );
+        orderResponse = orderList.getContent();
+        return new BaseResultDTO(
+                ResultNotify.successGet,
+                true,
+                orderResponse
+        );
     };
 
     @Override
