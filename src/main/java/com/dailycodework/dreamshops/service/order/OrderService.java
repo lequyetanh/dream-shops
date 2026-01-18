@@ -62,6 +62,7 @@ public class OrderService implements IOrderService {
         for(OrderProductReq prod : orderReq.getOrderProductList()){
             OrderProduct orderProduct = new OrderProduct();
             BeanUtils.copyProperties(prod,orderProduct);
+            orderProduct.setOrder(order);
             productList.add(orderProduct);
         }
         BeanUtils.copyProperties(orderReq,order);
