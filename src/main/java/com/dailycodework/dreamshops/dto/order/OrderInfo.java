@@ -1,17 +1,21 @@
 package com.dailycodework.dreamshops.dto.order;
 
 import com.dailycodework.dreamshops.dto.orderProduct.OrderProductReq;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderInfo {
     private Long id;
     private String code;
-    private String customerId;
+    private Long customerId;
     private ZonedDateTime orderDate;
     private String description;
     private BigDecimal discountAmount;
@@ -19,13 +23,14 @@ public class OrderInfo {
     private BigDecimal vatAmount;
     private BigDecimal totalAmount;
     private Long companyId;
+    private Integer status;
     private String extra;
     List<OrderProductReq> orderProductList;
 
     OrderInfo(
             Long id,
             String code,
-            String customerId,
+            Long customerId,
             ZonedDateTime orderDate,
             String description,
             BigDecimal discountAmount,
@@ -33,6 +38,7 @@ public class OrderInfo {
             BigDecimal vatAmount,
             BigDecimal totalAmount,
             Long companyId,
+            Integer status,
             String extra
     ){
         this.id = id;
@@ -45,6 +51,7 @@ public class OrderInfo {
         this.vatAmount = vatAmount;
         this.totalAmount = totalAmount;
         this.companyId = companyId;
+        this.status = status;
         this.extra = extra;
     }
 }

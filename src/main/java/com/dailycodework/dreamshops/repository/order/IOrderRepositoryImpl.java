@@ -32,7 +32,7 @@ public class IOrderRepositoryImpl implements OrderRepositoryCustom {
         List<OrderInfo> orderResponse = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append(" from orders o");
+        sql.append(" from orders o join order_product op on o.id = op.order_id ");
         if(keyword != null && !keyword.isEmpty()){
             sql.append(" where (o.code like :keyword)");
             params.put("keyword", "%" + keyword + "%");
@@ -45,10 +45,11 @@ public class IOrderRepositoryImpl implements OrderRepositoryCustom {
                         "o.order_date orderDate, " +
                         "o.description, " +
                         "o.discount_amount discountAmount, " +
-                        "o.vat_rate vatRate " +
-                        "o.vat_amount vatAmount " +
-                        "o.total_amount totalAmount " +
-                        "o.company_id companyId " +
+                        "o.vat_rate vatRate, " +
+                        "o.vat_amount vatAmount, " +
+                        "o.total_amount totalAmount, " +
+                        "o.company_id companyId, " +
+                        "o.status status, " +
                         "o.extra " +
                         sql,
                 "OrderResponse"

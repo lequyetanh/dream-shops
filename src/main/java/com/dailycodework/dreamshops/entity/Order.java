@@ -23,7 +23,7 @@ import java.util.List;
                                                 @ColumnResult(name = "id", type = Long.class),
                                                 @ColumnResult(name = "code", type = String.class),
                                                 @ColumnResult(name = "customerId", type = Long.class),
-                                                @ColumnResult(name = "orderDate", type = String.class),
+                                                @ColumnResult(name = "orderDate", type = ZonedDateTime.class),
                                                 @ColumnResult(name = "description", type = String.class),
                                                 @ColumnResult(name = "discountAmount", type = BigDecimal.class),
                                                 @ColumnResult(name = "vatRate", type = Integer.class),
@@ -44,7 +44,7 @@ public class Order {
     private Long id;
     private String code;
     @Column(name = "customer_id")
-    private String customerId;
+    private Long customerId;
     @Column(name = "order_date")
     private ZonedDateTime  orderDate;
     private String description;
