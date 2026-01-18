@@ -32,7 +32,7 @@ public class IOrderRepositoryImpl implements OrderRepositoryCustom {
         List<OrderInfo> orderResponse = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append(" from orders o join order_product op on o.id = op.order_id ");
+        sql.append(" from orders o left join order_product op on o.id = op.order_id ");
         if(keyword != null && !keyword.isEmpty()){
             sql.append(" where (o.code like :keyword)");
             params.put("keyword", "%" + keyword + "%");
