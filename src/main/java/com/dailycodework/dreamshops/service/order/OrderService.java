@@ -42,29 +42,29 @@ public class OrderService implements IOrderService {
 
     @Override
     public BaseResultDTO createOrder(OrderInfo orderReq){
-//        Order order = new Order();
-//        List<OrderProduct> productList = new ArrayList<>();
-//        for(OrderProductReq prod : orderReq.getOrderProductList()){
-//            OrderProduct orderProduct = new OrderProduct();
-//            BeanUtils.copyProperties(prod,orderProduct);
-//            productList.add(orderProduct);
-//        }
-//        BeanUtils.copyProperties(orderReq,order);
-//        order.setProducts(productList);
-//        orderRepository.save(order);
-//        return new BaseResultDTO(
-//                ResultNotify.successCreate,
-//                true,
-//                order
-//        );
-
-        // Gửi message vào queue để tạo đơn hàng
-        orderProducer.createOrderQueue(orderReq.getCompanyId());
+        Order order = new Order();
+        List<OrderProduct> productList = new ArrayList<>();
+        for(OrderProductReq prod : orderReq.getOrderProductList()){
+            OrderProduct orderProduct = new OrderProduct();
+            BeanUtils.copyProperties(prod,orderProduct);
+            productList.add(orderProduct);
+        }
+        BeanUtils.copyProperties(orderReq,order);
+        order.setProducts(productList);
+        orderRepository.save(order);
         return new BaseResultDTO(
                 ResultNotify.successCreate,
                 true,
-                null
+                order
         );
+
+        // Gửi message vào queue để tạo đơn hàng
+//        orderProducer.createOrderQueue(orderReq.getCompanyId());
+//        return new BaseResultDTO(
+//                ResultNotify.successCreate,
+//                true,
+//                null
+//        );
     };
 
     @Override
