@@ -21,7 +21,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     private final EntityManager entityManager;
 
     @Override
-    Page<OrderInfo> getOrdersWithPaging(
+    public Page<OrderInfo> getOrdersWithPaging(
             Pageable pageable,
             String keyword,
             String fromDate,
