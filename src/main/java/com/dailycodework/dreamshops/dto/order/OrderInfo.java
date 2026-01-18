@@ -21,4 +21,30 @@ public class OrderInfo {
     private Long companyId;
     private String extra;
     List<OrderProductReq> orderProductList;
+
+    OrderInfo(
+            Long id,
+            String code,
+            String customerId,
+            ZonedDateTime orderDate,
+            String description,
+            BigDecimal discountAmount,
+            Integer vatRate,
+            BigDecimal vatAmount,
+            BigDecimal totalAmount,
+            Long companyId,
+            String extra
+    ){
+        this.id = id;
+        this.code = code;
+        this.customerId = customerId;
+        this.orderDate = orderDate;
+        this.description = description;
+        this.discountAmount = discountAmount;
+        this.vatRate = vatRate;
+        this.vatAmount = vatAmount;
+        this.totalAmount = totalAmount;
+        this.companyId = companyId;
+        this.extra = extra;
+    }
 }

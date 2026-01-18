@@ -21,7 +21,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     private final EntityManager entityManager;
 
     @Override
-    public Page<OrderInfo> getOrdersWithPaging(
+    public Page<OrderInfo> getOrderWithPaging(
             Pageable pageable,
             String keyword,
             String fromDate,
@@ -51,7 +51,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                         "o.company_id companyId " +
                         "o.extra " +
                         sql,
-                "OrderInfo"
+                "OrderResponse"
         );
         Common.setParamsWithPageable(query, params, pageable, 0);
         orderResponse = query.getResultList();

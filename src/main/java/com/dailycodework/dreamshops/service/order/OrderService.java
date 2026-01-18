@@ -34,7 +34,7 @@ public class OrderService implements IOrderService {
             Integer status
     ){
         List<OrderInfo> orderResponse = new ArrayList<>();
-        Page<OrderInfo> orderList = orderRepository.getOrdersWithPaging(
+        Page<OrderInfo> orderList = orderRepository.getOrderWithPaging(
                 pageable,
                 keyword,
                 fromDate,

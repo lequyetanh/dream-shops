@@ -1,7 +1,6 @@
 package com.dailycodework.dreamshops.entity;
 
 import com.dailycodework.dreamshops.dto.order.OrderInfo;
-import com.dailycodework.dreamshops.dto.product.ProductResponse;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;

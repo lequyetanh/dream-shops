@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderRepositoryCustom {
-    Page<OrderInfo> getOrdersWithPaging(
+    Page<OrderInfo> getOrderWithPaging(
             Pageable pageable,
             String keyword,
             String fromDate,
