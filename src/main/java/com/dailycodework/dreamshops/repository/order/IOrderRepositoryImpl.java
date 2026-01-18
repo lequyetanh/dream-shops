@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
-public class OrderRepositoryImpl implements OrderRepositoryCustom {
+public class IOrderRepositoryImpl implements OrderRepositoryCustom {
     private final EntityManager entityManager;
 
     @Override
@@ -34,7 +34,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         StringBuilder sql = new StringBuilder();
         sql.append(" from orders o");
         if(keyword != null && !keyword.isEmpty()){
-            sql.append(" where (o.customer_name like :keyword or o.customer_phone like :keyword or o.customer_email like :keyword)");
+            sql.append(" where (o.code like :keyword)");
             params.put("keyword", "%" + keyword + "%");
         }
         Query query = entityManager.createNativeQuery(
