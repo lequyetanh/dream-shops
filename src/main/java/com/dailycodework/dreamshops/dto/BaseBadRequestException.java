@@ -13,22 +13,22 @@ public class BaseBadRequestException {
     String errorKey;
     String originalMessage;
 
-    private BaseBadRequestException(String entityName) {
+    public BaseBadRequestException(String entityName) {
         this.entityName = entityName;
     }
 
-    private BaseBadRequestException(String entityName, String errorKey) {
+    public BaseBadRequestException(String entityName, String errorKey) {
         this.entityName = entityName;
         this.errorKey = errorKey;
     }
 
-    private BaseBadRequestException(String entityName, String errorKey, Object[] args) {
+    public BaseBadRequestException(String entityName, String errorKey, Object[] args) {
         this.entityName = entityName;
         this.args = args;
         this.errorKey = errorKey;
     }
 
-    private BaseBadRequestException(String entityName, String errorKey, Object[] args, String originalMessage) {
+    public BaseBadRequestException(String entityName, String errorKey, Object[] args, String originalMessage) {
         this.entityName = entityName;
         this.args = args;
         this.errorKey = errorKey;
