@@ -1,6 +1,8 @@
 package com.dailycodework.dreamshops.entity;
 
+import com.dailycodework.dreamshops.constant.BaseConstant;
 import com.dailycodework.dreamshops.dto.order.OrderInfo;
+import com.dailycodework.dreamshops.util.Common;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -60,6 +62,16 @@ public class Order {
     private Long companyId;
     private Integer status;
     private String extra;
+
+    public void setOrderDate(ZonedDateTime orderDate) {
+        this.orderDate = orderDate;
+        Integer normDate = Common.normalizedTime(orderDate, BaseConstant.NORMALIZED_DATE_FORMAT);
+    }
+
+    public void setBillDate(String orderDate) {
+        ZonedDateTime orderDateConvert = Common.convertStringToZoneDateTime(orderDate, BaseConstant.ZONED_DATE_TIME_FORMAT);
+        this.orderDate = orderDateConvert;
+    }
 
     @JsonManagedReference
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
