@@ -11,6 +11,7 @@ import com.dailycodework.dreamshops.rabbitmq.producer.OrderProducer;
 import com.dailycodework.dreamshops.repository.order.IOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,21 @@ public class OrderService implements IOrderService {
             String orderCode,
             Integer status
     ){
-        return null;
+        List<OrderInfo> orderResponse = new ArrayList<>();
+        Page<OrderInfo> orderList = orderRepository.getOrderWithPaging(
+                pageable,
+                keyword,
+                fromDate,
+                toDate,
+                orderCode,
+                status
+        );
+        orderResponse = orderList.getContent();
+        return new BaseResultDTO(
+                ResultNotify.successGet,
+                true,
+                orderResponse
+        );
     };
 
     @Override
@@ -42,29 +57,30 @@ public class OrderService implements IOrderService {
 
     @Override
     public BaseResultDTO createOrder(OrderInfo orderReq){
-//        Order order = new Order();
-//        List<OrderProduct> productList = new ArrayList<>();
-//        for(OrderProductReq prod : orderReq.getOrderProductList()){
-//            OrderProduct orderProduct = new OrderProduct();
-//            BeanUtils.copyProperties(prod,orderProduct);
-//            productList.add(orderProduct);
-//        }
-//        BeanUtils.copyProperties(orderReq,order);
-//        order.setProducts(productList);
-//        orderRepository.save(order);
-//        return new BaseResultDTO(
-//                ResultNotify.successCreate,
-//                true,
-//                order
-//        );
-
-        // Gửi message vào queue để tạo đơn hàng
-        orderProducer.createOrderQueue(orderReq.getCompanyId());
+        Order order = new Order();
+        List<OrderProduct> productList = new ArrayList<>();
+        for(OrderProductReq prod : orderReq.getOrderProductList()){
+            OrderProduct orderProduct = new OrderProduct();
+            BeanUtils.copyProperties(prod,orderProduct);
+            orderProduct.setOrder(order);
+            productList.add(orderProduct);
+        }
+        BeanUtils.copyProperties(orderReq,order);
+        order.setProducts(productList);
+        orderRepository.save(order);
         return new BaseResultDTO(
                 ResultNotify.successCreate,
                 true,
-                null
+                order
         );
+
+        // Gửi message vào queue để tạo đơn hàng
+//        orderProducer.createOrderQueue(orderReq.getCompanyId());
+//        return new BaseResultDTO(
+//                ResultNotify.successCreate,
+//                true,
+//                null
+//        );
     };
 
     @Override

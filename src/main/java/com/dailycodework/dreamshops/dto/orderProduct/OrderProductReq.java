@@ -17,4 +17,5 @@ public class OrderProductReq {
     private Integer vatRate;
     private BigDecimal vatAmount;
     private BigDecimal totalPrice;
+    private Long orderId;
 }
