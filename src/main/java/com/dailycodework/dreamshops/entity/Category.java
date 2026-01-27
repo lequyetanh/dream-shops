@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "category")
@@ -18,4 +21,12 @@ public class Category {
     private String description;
     @Column(name = "company_id")
     private Long companyId;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ProductCategory",
+            joinColumns = { @JoinColumn(name = "category_id", referencedColumnName = "id") },
+            inverseJoinColumns = { @JoinColumn(name = "product_id", columnDefinition = "id") }
+    )
+    private List<Product> products = new ArrayList<>();
 }
