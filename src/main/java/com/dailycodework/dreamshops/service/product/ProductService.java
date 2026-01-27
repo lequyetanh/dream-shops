@@ -4,7 +4,9 @@ import com.dailycodework.dreamshops.constant.ResultNotify;
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.dto.product.ProductInfo;
 import com.dailycodework.dreamshops.dto.product.ProductResponse;
+import com.dailycodework.dreamshops.entity.Category;
 import com.dailycodework.dreamshops.entity.Product;
+import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
 import com.dailycodework.dreamshops.repository.product.IProductRepository;
 import com.dailycodework.dreamshops.service.RedisManagementService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ import static com.dailycodework.dreamshops.constant.RedisConstant.PRODUCT_LIST;
 public class ProductService implements IProductService{
     public final IProductRepository productRepository;
     public final RedisManagementService redisManagementService;
+    public final ICategoryRepository categoryRepository;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -83,6 +86,8 @@ public class ProductService implements IProductService{
     public BaseResultDTO createProduct(ProductInfo productReq){
         Product product = new Product();
         BeanUtils.copyProperties(productReq,product);
+        List<Category> categories = categoryRepository.findAllById(productReq.getCategoryIds());
+        product.getCategories().addAll(categories);
         productRepository.save(product);
         return new BaseResultDTO(
                 ResultNotify.successCreate,

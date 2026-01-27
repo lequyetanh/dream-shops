@@ -3,6 +3,7 @@ package com.dailycodework.dreamshops.dto.product;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class ProductInfo {
@@ -14,4 +15,6 @@ public class ProductInfo {
     private BigDecimal inPrice;
     private BigDecimal outPrice;
     private Long companyId;
+
+    private List<Long> categoryIds;
 }
