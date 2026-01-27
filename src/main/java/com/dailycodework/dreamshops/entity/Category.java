@@ -22,11 +22,6 @@ public class Category {
     @Column(name = "company_id")
     private Long companyId;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "ProductCategory",
-            joinColumns = { @JoinColumn(name = "category_id", referencedColumnName = "id") },
-            inverseJoinColumns = { @JoinColumn(name = "product_id", columnDefinition = "id") }
-    )
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 }
