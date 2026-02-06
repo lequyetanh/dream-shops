@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CompanyService implements ICompanyService {
     private final ICompanyRepository companyRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
     public BaseResultDTO getCompanyWithPaging(
@@ -42,6 +44,7 @@ public class CompanyService implements ICompanyService {
     public BaseResultDTO createCompany(CompanyInfo companyReq){
         Company company = new Company();
         BeanUtils.copyProperties(companyReq, company);
+        company.setExtra(objectMapper.writeValueAsString(companyReq.getExtra()));
         companyRepository.save(company);
         return new BaseResultDTO(
                 ResultNotify.successCreate,
