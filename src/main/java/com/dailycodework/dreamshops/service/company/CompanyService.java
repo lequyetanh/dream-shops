@@ -7,6 +7,7 @@ import com.dailycodework.dreamshops.dto.company.UserLogin;
 import com.dailycodework.dreamshops.entity.Company;
 import com.dailycodework.dreamshops.repository.company.ICompanyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -39,14 +40,41 @@ public class CompanyService implements ICompanyService {
     };
     @Override
     public BaseResultDTO createCompany(CompanyInfo companyReq){
-        return null;
+        Company company = new Company();
+        BeanUtils.copyProperties(companyReq, company);
+        companyRepository.save(company);
+        return new BaseResultDTO(
+                ResultNotify.successCreate,
+                true,
+                company
+        );
     };
     @Override
     public BaseResultDTO updateCompany(CompanyInfo companyReq){
+        Optional<Company> companyOpt = companyRepository.findById(companyReq.getId());
+        if(companyOpt.isPresent()){
+            Company company = companyOpt.get();
+            BeanUtils.copyProperties(companyReq, company);
+            companyRepository.save(company);
+            return new BaseResultDTO(
+                    ResultNotify.successUpdate,
+                    true,
+                    company
+            );
+        }
         return null;
     };
     @Override
     public BaseResultDTO deleteCompany(Long id){
+        Optional<Company> companyOpt = companyRepository.findById(id);
+        if(companyOpt.isPresent()){
+            companyRepository.deleteById(id);
+            return new BaseResultDTO(
+                    ResultNotify.successDelete,
+                    true,
+                    null
+            );
+        }
         return null;
     };
 

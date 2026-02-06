@@ -1,7 +1,11 @@
 package com.dailycodework.dreamshops.dto.company;
 
 import jakarta.persistence.Column;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CompanyInfo {
     private Long id;
     private String name;

@@ -18,4 +18,5 @@ public class Company {
     @Column(name = "tax_code")
     private String taxCode;
     private String password;
+    private String extra;
 }

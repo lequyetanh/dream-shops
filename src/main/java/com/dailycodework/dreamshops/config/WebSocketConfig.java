@@ -23,7 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
-    
+
     //    client sẽ lắng nghe ntn
     //    const socket = new SockJS('http://localhost:8080/ws'); // CONNECT
     //    const stompClient = Stomp.over(socket);

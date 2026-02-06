@@ -41,27 +41,13 @@ public class ProductService implements IProductService{
             String keyword
     ){
         List<ProductResponse> productResponses = new ArrayList<>();
-        if(redisManagementService.getValue(PRODUCT_LIST) != null){
-            Object value = redisManagementService.getValue(PRODUCT_LIST);
-
-            if (value != null) {
-                String json = (String) value;
-                    productResponses =
-                        objectMapper.readValue(
-                                json,
-                                new TypeReference<List<ProductResponse>>() {}
-                        );
-            }
-        }else{
-            Page<ProductResponse> productList = productRepository.getWithPaging(
-                    pageable,
-                    sort,
-                    companyId,
-                    keyword
-            );
-            productResponses = productList.getContent();
-            redisManagementService.setValueWithTimeUnit(PRODUCT_LIST, objectMapper.writeValueAsString(productResponses), 300, TimeUnit.MINUTES);
-        }
+        Page<ProductResponse> productList = productRepository.getWithPaging(
+                pageable,
+                sort,
+                companyId,
+                keyword
+        );
+        productResponses = productList.getContent();
         return new BaseResultDTO(
                 ResultNotify.successGet,
                 true,

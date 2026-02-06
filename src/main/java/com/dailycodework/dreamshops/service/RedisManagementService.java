@@ -1,23 +1,22 @@
 package com.dailycodework.dreamshops.service;
 
-import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
 public class RedisManagementService {
-
     private final RedisTemplate<String, Object> redisTemplate;
+    private final HashOperations<String, String, Object> hashOperations;
 
     public RedisManagementService(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
+        this.hashOperations = redisTemplate.opsForHash();
     }
 
     // lưu key-value vào redis, tự động hết hạn sau 1 khoảng thời gian
@@ -103,4 +102,16 @@ public class RedisManagementService {
         redisTemplate.delete(keys);
     }
 
+    // key don le
+    public void putToHash(String key, String property, Object data) {
+        hashOperations.put(key, property, data);
+    }
+
+    public Object getInHash(String key, String property) {
+        return hashOperations.get(key, property);
+    }
+
+    public Long increaseHash(String key, String property, long delta) {
+        return hashOperations.increment(key, property, delta);
+    }
 }
