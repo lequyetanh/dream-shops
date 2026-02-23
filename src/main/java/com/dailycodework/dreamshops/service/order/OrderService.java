@@ -67,6 +67,7 @@ public class OrderService implements IOrderService {
         }
         BeanUtils.copyProperties(orderReq,order);
         order.setProducts(productList);
+        order.setOrderDate(orderReq.getOrderDate());
         orderRepository.save(order);
         return new BaseResultDTO(
                 ResultNotify.successCreate,

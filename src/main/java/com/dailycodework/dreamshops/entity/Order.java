@@ -68,7 +68,7 @@ public class Order {
         Integer normDate = Common.normalizedTime(orderDate, BaseConstant.NORMALIZED_DATE_FORMAT);
     }
 
-    public void setBillDate(String orderDate) {
+    public void setOrderDate(String orderDate) {
         ZonedDateTime orderDateConvert = Common.convertStringToZoneDateTime(orderDate, BaseConstant.ZONED_DATE_TIME_FORMAT);
         this.orderDate = orderDateConvert;
     }
