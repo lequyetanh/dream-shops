@@ -16,7 +16,7 @@ public class OrderInfo {
     private Long id;
     private String code;
     private Long customerId;
-    private String orderDate;
+    private ZonedDateTime orderDate;
     private String description;
     private BigDecimal discountAmount;
     private Integer vatRate;
@@ -31,7 +31,7 @@ public class OrderInfo {
             Long id,
             String code,
             Long customerId,
-            String orderDate,
+            ZonedDateTime orderDate,
             String description,
             BigDecimal discountAmount,
             Integer vatRate,

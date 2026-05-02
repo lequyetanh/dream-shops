@@ -20,6 +20,14 @@ public class BaseResultDTO {
         this.data = data;
     }
 
+    public BaseResultDTO(Object message, boolean status, Object data, Integer count) {
+        this.message = message;
+        this.status = status;
+        this.data = data;
+        this.count = count;
+    }
+
+
     public BaseResultDTO(Object message, String reason, boolean status) {
         this.message = message;
         this.reason = reason;

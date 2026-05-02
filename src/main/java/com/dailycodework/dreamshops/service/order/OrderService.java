@@ -31,7 +31,8 @@ public class OrderService implements IOrderService {
             String fromDate,
             String toDate,
             String orderCode,
-            Integer status
+            Integer status,
+            Integer companyId
     ){
         List<OrderInfo> orderResponse = new ArrayList<>();
         Page<OrderInfo> orderList = orderRepository.getOrderWithPaging(
@@ -40,13 +41,15 @@ public class OrderService implements IOrderService {
                 fromDate,
                 toDate,
                 orderCode,
-                status
+                status,
+                companyId
         );
         orderResponse = orderList.getContent();
         return new BaseResultDTO(
                 ResultNotify.successGet,
                 true,
-                orderResponse
+                orderResponse,
+                (int) orderList.getTotalElements()
         );
     };
 

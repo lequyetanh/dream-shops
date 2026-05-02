@@ -11,6 +11,7 @@ public interface OrderRepositoryCustom {
             String fromDate,
             String toDate,
             String orderCode,
-            Integer status
+            Integer status,
+            Integer companyId
     );
 }

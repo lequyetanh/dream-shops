@@ -22,7 +22,8 @@ public class Order {
             @RequestParam(required = false) String fromDate,
             @RequestParam(required = false) String toDate,
             @RequestParam(required = false) String orderCode,
-            @RequestParam(required = false) Integer status
+            @RequestParam(required = false) Integer status,
+            @RequestParam(required = false) Integer companyId
     ){
         BaseResultDTO result = orderService.getOrderWithPaging(
                 pageable,
@@ -30,7 +31,8 @@ public class Order {
                 fromDate,
                 toDate,
                 orderCode,
-                status
+                status,
+                companyId
         );
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

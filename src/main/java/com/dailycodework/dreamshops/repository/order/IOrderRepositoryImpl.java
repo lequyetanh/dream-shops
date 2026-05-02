@@ -27,16 +27,32 @@ public class IOrderRepositoryImpl implements OrderRepositoryCustom {
             String fromDate,
             String toDate,
             String orderCode,
-            Integer status
+            Integer status,
+            Integer companyId
     ){
+        Integer totalItem = 0;
+        StringBuilder countSql = new StringBuilder();
+        countSql.append("select count(*) from orders o");
+        Query countQuery = entityManager.createNativeQuery(countSql.toString());
+        totalItem = (Integer) countQuery.getSingleResult();
+
         List<OrderInfo> orderResponse = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" from orders o left join order_product op on o.id = op.order_id ");
         if(keyword != null && !keyword.isEmpty()){
-            sql.append(" where (o.code like :keyword)");
+            sql.append(" where (o.code like :keyword) ");
             params.put("keyword", "%" + keyword + "%");
         }
+        if(status != null){
+            sql.append(" and o.status = :status ");
+            params.put("status", status);
+        }
+        if(companyId != null){
+            sql.append(" and o.company_id = :companyId ");
+            params.put("companyId", companyId);
+        }
+
         Query query = entityManager.createNativeQuery(
                 "select " +
                         "o.id, " +
@@ -56,6 +72,6 @@ public class IOrderRepositoryImpl implements OrderRepositoryCustom {
         );
         Common.setParamsWithPageable(query, params, pageable, 0);
         orderResponse = query.getResultList();
-        return new PageImpl<>(orderResponse, pageable, 0);
+        return new PageImpl<>(orderResponse, pageable, totalItem);
     }
 }

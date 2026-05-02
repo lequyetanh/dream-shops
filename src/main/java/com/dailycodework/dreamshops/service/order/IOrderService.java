@@ -11,7 +11,8 @@ public interface IOrderService {
             String fromDate,
             String toDate,
             String OrderCode,
-            Integer Status
+            Integer Status,
+            Integer companyId
     );
     public BaseResultDTO findById(Long id);
     public BaseResultDTO createOrder(OrderInfo orderReq);
