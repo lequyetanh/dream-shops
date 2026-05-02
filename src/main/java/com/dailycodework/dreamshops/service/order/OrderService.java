@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +56,20 @@ public class OrderService implements IOrderService {
 
     @Override
     public BaseResultDTO findById(Long id){
-        return null;
+        Optional<Order> order = orderRepository.findById(id);
+        if(order.isPresent()){
+            return new BaseResultDTO(
+                    ResultNotify.successGet,
+                    true,
+                    order.get()
+            );
+        } else {
+            return new BaseResultDTO(
+                    ResultNotify.notFound,
+                    false,
+                    null
+            );
+        }
     };
 
     @Override
