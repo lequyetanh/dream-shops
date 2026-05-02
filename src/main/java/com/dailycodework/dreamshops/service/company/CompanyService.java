@@ -6,6 +6,7 @@ import com.dailycodework.dreamshops.dto.company.CompanyInfo;
 import com.dailycodework.dreamshops.dto.company.UserLogin;
 import com.dailycodework.dreamshops.entity.Company;
 import com.dailycodework.dreamshops.repository.company.ICompanyRepository;
+import com.dailycodework.dreamshops.service.RedisManagementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CompanyService implements ICompanyService {
     private final ICompanyRepository companyRepository;
+    public final RedisManagementService redisManagementService;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -29,14 +31,35 @@ public class CompanyService implements ICompanyService {
     };
     @Override
     public BaseResultDTO findById(Long id){
-        Optional<Company> company = companyRepository.findById(id);
-        if(company.isPresent()){
-            BaseResultDTO result = new BaseResultDTO(
-                    ResultNotify.successGet,
-                    true,
-                    company.get()
-            );
-            return result;
+        CompanyInfo companyReturn = new CompanyInfo();
+        if(redisManagementService.getInHash("company" + id, "name") != null){
+            String companyName = redisManagementService.getInHash("company" + id, "name").toString();
+            companyReturn.setName(companyName);
+            try{
+                BaseResultDTO result = new BaseResultDTO(
+                        ResultNotify.successGet,
+                        true,
+                        companyReturn
+                );
+                return result;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }else{
+            Optional<Company> company = companyRepository.findById(id);
+            if(company.isPresent()){
+                BeanUtils.copyProperties(company.get(), companyReturn);
+                redisManagementService.putToHash("company" + id, "name", company.get().getName());
+                redisManagementService.putToHash("company" + id, "phone", company.get().getPhone());
+                redisManagementService.putToHash("company" + id, "extra", company.get().getExtra());
+                BaseResultDTO result = new BaseResultDTO(
+                        ResultNotify.successGet,
+                        true,
+                        companyReturn
+                );
+                return result;
+            }
         }
         return null;
     };
