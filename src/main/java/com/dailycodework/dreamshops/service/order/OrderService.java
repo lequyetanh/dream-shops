@@ -57,19 +57,15 @@ public class OrderService implements IOrderService {
     @Override
     public BaseResultDTO findById(Long id){
         Optional<Order> order = orderRepository.findById(id);
-        if(order.isPresent()){
-            return new BaseResultDTO(
-                    ResultNotify.successGet,
-                    true,
-                    order.get()
-            );
-        } else {
-            return new BaseResultDTO(
-                    ResultNotify.notFound,
-                    false,
-                    null
-            );
-        }
+        return order.map(value -> new BaseResultDTO(
+                ResultNotify.successGet,
+                true,
+                value
+        )).orElseGet(() -> new BaseResultDTO(
+                ResultNotify.notFound,
+                false,
+                null
+        ));
     };
 
     @Override
