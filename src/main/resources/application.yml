@@ -17,6 +17,10 @@ spring:
     username: sa
     password: Sds@123
     type: com.microsoft.sqlserver.jdbc.SQLServerDataSource
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
   data:
     redis:
       host: 10.100.140.9
