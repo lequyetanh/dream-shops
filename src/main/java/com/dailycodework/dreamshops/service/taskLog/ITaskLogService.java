@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.service.takeLog;
+package com.dailycodework.dreamshops.service.taskLog;
 
 import com.dailycodework.dreamshops.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.entity.TaskLog;
