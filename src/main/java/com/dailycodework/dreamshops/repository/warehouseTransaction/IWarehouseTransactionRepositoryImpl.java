@@ -1,6 +1,7 @@
-package com.dailycodework.dreamshops.repository.order;
+package com.dailycodework.dreamshops.repository.warehouseTransaction;
 
 import com.dailycodework.dreamshops.dto.order.OrderInfo;
+import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactionList;
 import com.dailycodework.dreamshops.util.Common;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -8,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -18,39 +18,33 @@ import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
-public class IOrderRepositoryImpl implements OrderRepositoryCustom {
+public class IWarehouseTransactionRepositoryImpl implements  IWarehouseTransactionRepository {
     private final EntityManager entityManager;
 
     @Override
-    public Page<OrderInfo> getOrderWithPaging(
+    public Page<WarehouseTransactionList> getWarehouseTransactionWithPaging(
             Pageable pageable,
             String keyword,
             String fromDate,
             String toDate,
-            String orderCode,
-            Integer status,
             Integer companyId
     ){
         Integer totalItem = 0;
         StringBuilder countSql = new StringBuilder();
-        countSql.append("select count(*) from orders o");
+        countSql.append("select count(*) from warehouse_transaction wt");
         Query countQuery = entityManager.createNativeQuery(countSql.toString());
         totalItem = (Integer) countQuery.getSingleResult();
 
-        List<OrderInfo> orderResponse = new ArrayList<>();
+        List<WarehouseTransactionList> warehouseTransactionLists = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append(" from orders o left join order_product op on o.id = op.order_id ");
+        sql.append(" from warehouse_transaction wt left join warehouse_transaction_detail op on o.id = op.order_id ");
         if(keyword != null && !keyword.isEmpty()){
-            sql.append(" where (o.code like :keyword) ");
+            sql.append(" where (wt.code like :keyword) ");
             params.put("keyword", "%" + keyword + "%");
         }
-        if(status != null){
-            sql.append(" and o.status = :status ");
-            params.put("status", status);
-        }
         if(companyId != null){
-            sql.append(" and o.company_id = :companyId ");
+            sql.append(" and wt.company_id = :companyId ");
             params.put("companyId", companyId);
         }
 

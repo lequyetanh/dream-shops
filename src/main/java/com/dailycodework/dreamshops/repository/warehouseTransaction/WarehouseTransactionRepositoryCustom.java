@@ -4,8 +4,7 @@ import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactio
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface IWarehouseTransactionRepository {
-
+public interface WarehouseTransactionRepositoryCustom {
     Page<WarehouseTransactionList> getWarehouseTransactionWithPaging(
             Pageable pageable,
             String keyword,

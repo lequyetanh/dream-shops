@@ -23,6 +23,8 @@ public class WarehouseTransaction {
     private BigDecimal amount;
     @Column(name = "vat_rate")
     private Integer vatRate;
+    @Column(name = "vat_amount")
+    private Integer vatAmount;
     @Column(name = "total_amount")
     private BigDecimal totalAmount;
 
