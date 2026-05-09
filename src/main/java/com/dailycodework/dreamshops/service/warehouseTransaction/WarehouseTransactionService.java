@@ -69,13 +69,13 @@ public class WarehouseTransactionService implements IWarehouseTransactionService
     public BaseResultDTO createWarehouseTransaction(WarehouseTransactionReq warehouseTransactionReq){
         WarehouseTransaction warehouseTransaction = new WarehouseTransaction();
         List<WarehouseTransactionDetail> productList = new ArrayList<>();
+        BeanUtils.copyProperties(warehouseTransactionReq,warehouseTransaction);
         for(WarehouseTransactionDetailReq prod : warehouseTransactionReq.getDetails()){
             WarehouseTransactionDetail warehouseTransactionDetail = new WarehouseTransactionDetail();
             BeanUtils.copyProperties(prod,warehouseTransactionDetail);
-            warehouseTransactionDetail.setWarehouseTransaction(warehouseTransactionReq);
+            warehouseTransactionDetail.setWarehouseTransaction(warehouseTransaction);
             productList.add(warehouseTransactionDetail);
         }
-        BeanUtils.copyProperties(warehouseTransactionReq,warehouseTransaction);
         warehouseTransaction.setWarehouseTransactionDetail(productList);
         warehouseTransactionRepository.save(warehouseTransaction);
         return new BaseResultDTO(
