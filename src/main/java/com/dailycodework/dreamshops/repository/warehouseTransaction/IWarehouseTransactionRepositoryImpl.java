@@ -5,20 +5,24 @@ import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactio
 import com.dailycodework.dreamshops.util.Common;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.persistence.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class IWarehouseTransactionRepositoryImpl implements  IWarehouseTransactionRepository {
+public class IWarehouseTransactionRepositoryImpl implements WarehouseTransactionRepositoryCustom {
     private final EntityManager entityManager;
 
     @Override
@@ -50,23 +54,33 @@ public class IWarehouseTransactionRepositoryImpl implements  IWarehouseTransacti
 
         Query query = entityManager.createNativeQuery(
                 "select " +
-                        "o.id, " +
-                        "o.code, " +
-                        "o.customer_id customerId, " +
-                        "o.order_date orderDate, " +
-                        "o.description, " +
-                        "o.discount_amount discountAmount, " +
-                        "o.vat_rate vatRate, " +
-                        "o.vat_amount vatAmount, " +
-                        "o.total_amount totalAmount, " +
-                        "o.company_id companyId, " +
-                        "o.status status, " +
-                        "o.extra " +
+                        "wt.id, " +
+                        "wt.company_id companyId, " +
+                        "wt.no, " +
+                        "wt.date, " +
+                        "wt.description, " +
+                        "wt.amount, " +
+                        "wt.vat_rate vatRate, " +
+                        "wt.vat_amount vatAmount, " +
+                        "wt.total_amount totalAmount, " +
                         sql,
-                "OrderResponse"
+                Tuple.class
         );
         Common.setParamsWithPageable(query, params, pageable, 0);
-        orderResponse = query.getResultList();
-        return new PageImpl<>(orderResponse, pageable, totalItem);
+        List<Tuple> tuples = query.getResultList();
+        warehouseTransactionLists = tuples.stream().map(tuple -> {
+            WarehouseTransactionList warehouseTransactionList = new WarehouseTransactionList();
+            warehouseTransactionList.setId(tuple.get("id", Long.class));
+            warehouseTransactionList.setCompanyId(tuple.get("companyId", Integer.class));
+            warehouseTransactionList.setNo(tuple.get("no", String.class));
+            warehouseTransactionList.setDate(tuple.get("date", ZonedDateTime.class));
+            warehouseTransactionList.setDescription(tuple.get("description", String.class));
+            warehouseTransactionList.setAmount(tuple.get("amount", BigDecimal.class));
+            warehouseTransactionList.setVatRate(tuple.get("vatRate", Integer.class));
+            warehouseTransactionList.setVatAmount(tuple.get("vatAmount", BigDecimal.class));
+            warehouseTransactionList.setTotalAmount(tuple.get("totalAmount", BigDecimal.class));
+            return warehouseTransactionList;
+        }).collect(Collectors.toList());
+        return new PageImpl<>(warehouseTransactionLists, pageable, totalItem);
     }
 }

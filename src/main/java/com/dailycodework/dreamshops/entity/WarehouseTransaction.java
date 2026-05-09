@@ -1,5 +1,7 @@
 package com.dailycodework.dreamshops.entity;
 
+import com.dailycodework.dreamshops.constant.BaseConstant;
+import com.dailycodework.dreamshops.util.Common;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -30,6 +32,11 @@ public class WarehouseTransaction {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "warehouse_transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<WarehouseTransaction> warehouseTransactionDetail;
+    private List<WarehouseTransactionDetail> warehouseTransactionDetail;
+
+    public void setWarehouseTransactionDate(String warehouseTransactionDate) {
+        ZonedDateTime warehouseTransactionDateConvert = Common.convertStringToZoneDateTime(warehouseTransactionDate, BaseConstant.ZONED_DATE_TIME_FORMAT);
+        this.date = warehouseTransactionDateConvert;
+    }
 
 }

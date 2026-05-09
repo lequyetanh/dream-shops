@@ -1,4 +1,100 @@
 package com.dailycodework.dreamshops.service.warehouseTransaction;
 
-public class WarehouseTransactionService {
+import com.dailycodework.dreamshops.constant.ResultNotify;
+import com.dailycodework.dreamshops.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.dto.order.OrderInfo;
+import com.dailycodework.dreamshops.dto.orderProduct.OrderProductReq;
+import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactionDetailReq;
+import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactionList;
+import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactionReq;
+import com.dailycodework.dreamshops.entity.Order;
+import com.dailycodework.dreamshops.entity.OrderProduct;
+import com.dailycodework.dreamshops.entity.WarehouseTransaction;
+import com.dailycodework.dreamshops.entity.WarehouseTransactionDetail;
+import com.dailycodework.dreamshops.repository.warehouseTransaction.IWarehouseTransactionRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class WarehouseTransactionService implements IWarehouseTransactionService {
+    private final IWarehouseTransactionRepository warehouseTransactionRepository;
+
+    @Override
+    public BaseResultDTO getWarehouseTransaction(
+            Pageable pageable,
+            String keyword,
+            String fromDate,
+            String toDate,
+            Integer companyId
+    ) {
+        List<WarehouseTransactionList> warehouseTransactionResponse = new ArrayList<>();
+        Page<WarehouseTransactionList> warehouseTransactionList = warehouseTransactionRepository.getWarehouseTransactionWithPaging(
+                pageable,
+                keyword,
+                fromDate,
+                toDate,
+                companyId
+        );
+        warehouseTransactionResponse = warehouseTransactionList.getContent();
+        return new BaseResultDTO(
+                ResultNotify.successGet,
+                true,
+                warehouseTransactionResponse,
+                (int) warehouseTransactionList.getTotalElements()
+        );
+    };
+
+    @Override
+    public BaseResultDTO findById(Long id){
+        Optional<WarehouseTransaction> warehouseTransaction = warehouseTransactionRepository.findById(id);
+        return warehouseTransaction.map(value -> new BaseResultDTO(
+                ResultNotify.successGet,
+                true,
+                value
+        )).orElseGet(() -> new BaseResultDTO(
+                ResultNotify.notFound,
+                false,
+                null
+        ));
+    };
+    @Override
+    public BaseResultDTO createWarehouseTransaction(WarehouseTransactionReq warehouseTransactionReq){
+        WarehouseTransaction warehouseTransaction = new WarehouseTransaction();
+        List<WarehouseTransactionDetail> productList = new ArrayList<>();
+        for(WarehouseTransactionDetailReq prod : warehouseTransactionReq.getDetails()){
+            WarehouseTransactionDetail warehouseTransactionDetail = new WarehouseTransactionDetail();
+            BeanUtils.copyProperties(prod,warehouseTransactionDetail);
+            warehouseTransactionDetail.setWarehouseTransaction(warehouseTransactionReq);
+            productList.add(warehouseTransactionDetail);
+        }
+        BeanUtils.copyProperties(warehouseTransactionReq,warehouseTransaction);
+        warehouseTransaction.setWarehouseTransactionDetail(productList);
+        warehouseTransactionRepository.save(warehouseTransaction);
+        return new BaseResultDTO(
+                ResultNotify.successCreate,
+                true,
+                warehouseTransaction
+        );
+    };
+    @Override
+    public BaseResultDTO updateWarehouseTransaction(WarehouseTransactionReq warehouseTransactionReq){
+        return null;
+    };
+    @Override
+    public BaseResultDTO deleteWarehouseTransaction(Long id){
+        warehouseTransactionRepository.deleteById(id);
+        return new BaseResultDTO(
+                ResultNotify.successDelete,
+                true,
+                null
+        );
+    };
 }
