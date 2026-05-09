@@ -1,6 +1,6 @@
-package com.dailycodework.dreamshops.mapper.category;
+package com.dailycodework.dreamshops.payload.mapper.category;
 
-import com.dailycodework.dreamshops.dto.category.CategoryInfo;
+import com.dailycodework.dreamshops.payload.dto.category.CategoryInfo;
 import com.dailycodework.dreamshops.entity.Category;
 import org.mapstruct.Mapper;
 

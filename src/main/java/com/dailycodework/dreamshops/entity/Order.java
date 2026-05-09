@@ -1,7 +1,7 @@
 package com.dailycodework.dreamshops.entity;
 
 import com.dailycodework.dreamshops.constant.BaseConstant;
-import com.dailycodework.dreamshops.dto.order.OrderInfo;
+import com.dailycodework.dreamshops.payload.dto.order.OrderInfo;
 import com.dailycodework.dreamshops.util.Common;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;

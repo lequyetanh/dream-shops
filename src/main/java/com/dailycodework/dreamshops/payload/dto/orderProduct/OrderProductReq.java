@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.dto.orderProduct;
+package com.dailycodework.dreamshops.payload.dto.orderProduct;
 
 
 import jakarta.persistence.Column;

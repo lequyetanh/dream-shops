@@ -1,6 +1,6 @@
-package com.dailycodework.dreamshops.dto.order;
+package com.dailycodework.dreamshops.payload.dto.order;
 
-import com.dailycodework.dreamshops.dto.orderProduct.OrderProductReq;
+import com.dailycodework.dreamshops.payload.dto.orderProduct.OrderProductReq;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ public class OrderInfo {
     private Long id;
     private String code;
     private Long customerId;
-    private ZonedDateTime orderDate;
+    private String orderDate;
     private String description;
     private BigDecimal discountAmount;
     private Integer vatRate;
@@ -31,7 +31,7 @@ public class OrderInfo {
             Long id,
             String code,
             Long customerId,
-            ZonedDateTime orderDate,
+            String orderDate,
             String description,
             BigDecimal discountAmount,
             Integer vatRate,

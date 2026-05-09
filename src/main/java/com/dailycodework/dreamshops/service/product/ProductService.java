@@ -1,9 +1,9 @@
 package com.dailycodework.dreamshops.service.product;
 
 import com.dailycodework.dreamshops.constant.ResultNotify;
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.product.ProductInfo;
-import com.dailycodework.dreamshops.dto.product.ProductResponse;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.product.ProductInfo;
+import com.dailycodework.dreamshops.payload.dto.product.ProductResponse;
 import com.dailycodework.dreamshops.entity.Category;
 import com.dailycodework.dreamshops.entity.Product;
 import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
@@ -14,16 +14,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import tools.jackson.core.JsonParser;
-import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import static com.dailycodework.dreamshops.constant.RedisConstant.PRODUCT_LIST;
 
 @Service
 @RequiredArgsConstructor

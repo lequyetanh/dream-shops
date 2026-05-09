@@ -1,6 +1,6 @@
 package com.dailycodework.dreamshops.service.taskLog;
 
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.entity.TaskLog;
 import org.springframework.data.domain.Pageable;
 

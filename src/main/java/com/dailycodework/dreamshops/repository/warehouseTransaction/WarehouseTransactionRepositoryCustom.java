@@ -1,6 +1,6 @@
 package com.dailycodework.dreamshops.repository.warehouseTransaction;
 
-import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactionList;
+import com.dailycodework.dreamshops.payload.dto.warehouseTransaction.WarehouseTransactionList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

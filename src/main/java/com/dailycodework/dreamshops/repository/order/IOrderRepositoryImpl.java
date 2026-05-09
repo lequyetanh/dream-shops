@@ -1,6 +1,6 @@
 package com.dailycodework.dreamshops.repository.order;
 
-import com.dailycodework.dreamshops.dto.order.OrderInfo;
+import com.dailycodework.dreamshops.payload.dto.order.OrderInfo;
 import com.dailycodework.dreamshops.util.Common;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

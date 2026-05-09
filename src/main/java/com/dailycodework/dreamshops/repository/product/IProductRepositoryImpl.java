@@ -1,6 +1,6 @@
 package com.dailycodework.dreamshops.repository.product;
 
-import com.dailycodework.dreamshops.dto.product.ProductResponse;
+import com.dailycodework.dreamshops.payload.dto.product.ProductResponse;
 import com.dailycodework.dreamshops.util.Common;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;

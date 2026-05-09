@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.dto.warehouseTransaction;
+package com.dailycodework.dreamshops.payload.dto.warehouseTransaction;
 
 import lombok.Data;
 

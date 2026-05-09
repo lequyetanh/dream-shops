@@ -1,8 +1,8 @@
 package com.dailycodework.dreamshops.service.company;
 
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.company.CompanyInfo;
-import com.dailycodework.dreamshops.dto.company.UserLogin;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.company.CompanyInfo;
+import com.dailycodework.dreamshops.payload.dto.company.UserLogin;
 import org.springframework.data.domain.Pageable;
 
 public interface ICompanyService {

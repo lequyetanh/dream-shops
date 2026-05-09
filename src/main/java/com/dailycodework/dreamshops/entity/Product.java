@@ -1,6 +1,6 @@
 package com.dailycodework.dreamshops.entity;
 
-import com.dailycodework.dreamshops.dto.product.ProductResponse;
+import com.dailycodework.dreamshops.payload.dto.product.ProductResponse;
 import jakarta.persistence.*;
 import lombok.Data;
 

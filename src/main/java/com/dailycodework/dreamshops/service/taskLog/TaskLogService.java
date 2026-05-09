@@ -1,7 +1,9 @@
 package com.dailycodework.dreamshops.service.taskLog;
 
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.constant.ResultNotify;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.entity.TaskLog;
+import com.dailycodework.dreamshops.rabbitmq.producer.OrderProducer;
 import com.dailycodework.dreamshops.repository.takeLog.ITaskLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TaskLogService implements ITaskLogService{
     private final ITaskLogRepository taskLogRepository;
+    private final OrderProducer orderProducer;
 
     @Override
     public BaseResultDTO getTaskLogWithPaging(
@@ -26,12 +29,17 @@ public class TaskLogService implements ITaskLogService{
     };
 
     @Override
-    public BaseResultDTO createTaskLog (TaskLog customerReq){
-        return null;
+    public BaseResultDTO createTaskLog (TaskLog taskLog){
+        taskLogRepository.save(taskLog);
+        return new BaseResultDTO(
+                ResultNotify.successCreate,
+                true,
+                taskLog
+        );
     };
 
     @Override
-    public BaseResultDTO updateTaskLog (TaskLog customerReq){
+    public BaseResultDTO updateTaskLog (TaskLog taskLog){
         return null;
     };
 

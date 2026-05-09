@@ -1,10 +1,8 @@
 package com.dailycodework.dreamshops.service.product;
 
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.product.ProductInfo;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.product.ProductInfo;
 import org.springframework.data.domain.Pageable;
-
-import java.math.BigDecimal;
 
 public interface IProductService {
     public BaseResultDTO getProductWithPaging(

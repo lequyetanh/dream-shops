@@ -1,14 +1,18 @@
 package com.dailycodework.dreamshops.service.order;
 
 import com.dailycodework.dreamshops.constant.ResultNotify;
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.order.OrderInfo;
-import com.dailycodework.dreamshops.dto.orderProduct.OrderProductReq;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.order.OrderInfo;
+import com.dailycodework.dreamshops.payload.dto.orderProduct.OrderProductReq;
 import com.dailycodework.dreamshops.entity.Order;
 import com.dailycodework.dreamshops.entity.OrderProduct;
-import com.dailycodework.dreamshops.entity.Product;
+import com.dailycodework.dreamshops.entity.TaskLog;
+import com.dailycodework.dreamshops.payload.dto.taskLog.Content;
 import com.dailycodework.dreamshops.rabbitmq.producer.OrderProducer;
 import com.dailycodework.dreamshops.repository.order.IOrderRepository;
+import com.dailycodework.dreamshops.service.taskLog.TaskLogService;
+import com.dailycodework.dreamshops.util.Common;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -21,9 +25,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderService implements IOrderService {
     private final IOrderRepository orderRepository;
     private final OrderProducer orderProducer;
+    private final TaskLogService taskLogService;
 
     @Override
     public BaseResultDTO getOrderWithPaging(
@@ -82,19 +88,23 @@ public class OrderService implements IOrderService {
         order.setProducts(productList);
         order.setOrderDate(orderReq.getOrderDate());
         orderRepository.save(order);
+
+//        start sinh tasklog
+        TaskLog taskLog = new TaskLog();
+        Content content = new Content();
+        content.setBillIds(List.of(order.getId()));
+//        taskLog.setType("BILL_COMPLETION");
+//        taskLog.setContent(Common.toJsonString("billIds:[" + orderReq.getId() + "]"));
+        taskLog.setContent(Common.toJsonString(content));
+        taskLogService.createTaskLog(taskLog);
+//        end sinh tasklog
+        orderProducer.createOrderQueue(taskLog.getId());
+
         return new BaseResultDTO(
                 ResultNotify.successCreate,
                 true,
                 order
         );
-
-        // Gửi message vào queue để tạo đơn hàng
-//        orderProducer.createOrderQueue(orderReq.getCompanyId());
-//        return new BaseResultDTO(
-//                ResultNotify.successCreate,
-//                true,
-//                null
-//        );
     };
 
     @Override

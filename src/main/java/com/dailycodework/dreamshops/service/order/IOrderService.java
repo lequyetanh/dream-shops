@@ -1,7 +1,7 @@
 package com.dailycodework.dreamshops.service.order;
 
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.order.OrderInfo;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.order.OrderInfo;
 import org.springframework.data.domain.Pageable;
 
 public interface IOrderService {

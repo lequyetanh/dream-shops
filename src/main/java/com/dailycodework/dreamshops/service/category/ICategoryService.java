@@ -1,7 +1,7 @@
 package com.dailycodework.dreamshops.service.category;
 
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.category.CategoryInfo;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.category.CategoryInfo;
 import org.springframework.data.domain.Pageable;
 
 public interface ICategoryService {

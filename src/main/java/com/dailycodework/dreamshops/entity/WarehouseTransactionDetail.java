@@ -14,8 +14,8 @@ public class WarehouseTransactionDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "warehouse_transaction_id")
-    private Long warehouseTransactionId;
+//    @Column(name = "warehouse_transaction_id")
+//    private Long warehouseTransactionId;
     @Column(name = "product_id")
     private Long productId;
     private BigDecimal quantity;
@@ -26,4 +26,6 @@ public class WarehouseTransactionDetail {
     @JoinColumn(name = "warehouse_transaction_id", nullable = false, referencedColumnName = "id")
     @JsonBackReference
     private WarehouseTransaction warehouseTransaction;
+
+
 }

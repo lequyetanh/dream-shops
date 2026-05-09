@@ -1,14 +1,10 @@
 package com.dailycodework.dreamshops.service.warehouseTransaction;
 
 import com.dailycodework.dreamshops.constant.ResultNotify;
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.order.OrderInfo;
-import com.dailycodework.dreamshops.dto.orderProduct.OrderProductReq;
-import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactionDetailReq;
-import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactionList;
-import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactionReq;
-import com.dailycodework.dreamshops.entity.Order;
-import com.dailycodework.dreamshops.entity.OrderProduct;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.warehouseTransaction.WarehouseTransactionDetailReq;
+import com.dailycodework.dreamshops.payload.dto.warehouseTransaction.WarehouseTransactionList;
+import com.dailycodework.dreamshops.payload.dto.warehouseTransaction.WarehouseTransactionReq;
 import com.dailycodework.dreamshops.entity.WarehouseTransaction;
 import com.dailycodework.dreamshops.entity.WarehouseTransactionDetail;
 import com.dailycodework.dreamshops.repository.warehouseTransaction.IWarehouseTransactionRepository;
@@ -66,7 +62,7 @@ public class WarehouseTransactionService implements IWarehouseTransactionService
         ));
     };
     @Override
-    public BaseResultDTO createWarehouseTransaction(WarehouseTransactionReq warehouseTransactionReq){
+        public BaseResultDTO createWarehouseTransaction(WarehouseTransactionReq warehouseTransactionReq){
         WarehouseTransaction warehouseTransaction = new WarehouseTransaction();
         List<WarehouseTransactionDetail> productList = new ArrayList<>();
         BeanUtils.copyProperties(warehouseTransactionReq,warehouseTransaction);

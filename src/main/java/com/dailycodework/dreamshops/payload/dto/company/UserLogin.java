@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.dto.company;
+package com.dailycodework.dreamshops.payload.dto.company;
 
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.dto.category;
+package com.dailycodework.dreamshops.payload.dto.category;
 
 import lombok.*;
 

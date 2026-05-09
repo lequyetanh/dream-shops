@@ -1,7 +1,6 @@
 package com.dailycodework.dreamshops.repository.warehouseTransaction;
 
-import com.dailycodework.dreamshops.dto.order.OrderInfo;
-import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactionList;
+import com.dailycodework.dreamshops.payload.dto.warehouseTransaction.WarehouseTransactionList;
 import com.dailycodework.dreamshops.util.Common;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;

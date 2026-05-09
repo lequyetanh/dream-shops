@@ -1,10 +1,10 @@
 package com.dailycodework.dreamshops.service.category;
 
 import com.dailycodework.dreamshops.constant.ResultNotify;
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.category.CategoryInfo;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.category.CategoryInfo;
 import com.dailycodework.dreamshops.entity.Category;
-import com.dailycodework.dreamshops.mapper.category.CategoryMapper;
+import com.dailycodework.dreamshops.payload.mapper.category.CategoryMapper;
 import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

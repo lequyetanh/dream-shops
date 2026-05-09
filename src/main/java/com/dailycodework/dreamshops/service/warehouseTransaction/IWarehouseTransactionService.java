@@ -1,8 +1,7 @@
 package com.dailycodework.dreamshops.service.warehouseTransaction;
 
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.warehouseTransaction.WarehouseTransactionReq;
-import com.dailycodework.dreamshops.entity.WarehouseTransaction;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.warehouseTransaction.WarehouseTransactionReq;
 import org.springframework.data.domain.Pageable;
 
 public interface IWarehouseTransactionService {

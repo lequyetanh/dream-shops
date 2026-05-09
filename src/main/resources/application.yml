@@ -21,6 +21,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.SQLServerDialect
+    generate-ddl: true
   data:
     redis:
       host: 10.100.140.9

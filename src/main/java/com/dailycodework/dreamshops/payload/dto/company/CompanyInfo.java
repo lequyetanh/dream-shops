@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.dto.company;
+package com.dailycodework.dreamshops.payload.dto.company;
 
 import jakarta.persistence.Column;
 import lombok.Getter;

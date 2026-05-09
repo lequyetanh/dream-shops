@@ -31,7 +31,7 @@ public class WarehouseTransaction {
     private BigDecimal totalAmount;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "warehouse_transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "warehouseTransaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<WarehouseTransactionDetail> warehouseTransactionDetail;
 
     public void setWarehouseTransactionDate(String warehouseTransactionDate) {

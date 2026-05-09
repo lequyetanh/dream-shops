@@ -1,7 +1,7 @@
 package com.dailycodework.dreamshops.controller;
 
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.customer.CustomerInfo;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.customer.CustomerInfo;
 import com.dailycodework.dreamshops.service.customer.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

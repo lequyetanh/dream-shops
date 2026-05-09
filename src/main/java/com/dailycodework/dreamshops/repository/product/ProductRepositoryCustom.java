@@ -1,6 +1,6 @@
 package com.dailycodework.dreamshops.repository.product;
 
-import com.dailycodework.dreamshops.dto.product.ProductResponse;
+import com.dailycodework.dreamshops.payload.dto.product.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
