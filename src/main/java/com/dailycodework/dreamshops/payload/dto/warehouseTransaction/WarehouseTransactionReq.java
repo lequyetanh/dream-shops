@@ -13,7 +13,7 @@ public class WarehouseTransactionReq {
     private String description;
     private ZonedDateTime date;
     private BigDecimal amount;
-    private Integer companyId;
+    private Long companyId;
     private Integer vatRate;
     private BigDecimal vatAmount;
     private BigDecimal totalAmount;

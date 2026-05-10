@@ -41,7 +41,7 @@ public class IWarehouseTransactionRepositoryImpl implements WarehouseTransaction
         List<WarehouseTransactionList> warehouseTransactionLists = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append(" from warehouse_transaction wt left join warehouse_transaction_detail op on o.id = op.order_id ");
+        sql.append(" from warehouse_transaction wt left join warehouse_transaction_detail wtd on wt.id = wtd.warehouse_transaction_id ");
         if(keyword != null && !keyword.isEmpty()){
             sql.append(" where (wt.code like :keyword) ");
             params.put("keyword", "%" + keyword + "%");
@@ -61,7 +61,7 @@ public class IWarehouseTransactionRepositoryImpl implements WarehouseTransaction
                         "wt.amount, " +
                         "wt.vat_rate vatRate, " +
                         "wt.vat_amount vatAmount, " +
-                        "wt.total_amount totalAmount, " +
+                        "wt.total_amount totalAmount " +
                         sql,
                 Tuple.class
         );
@@ -70,7 +70,7 @@ public class IWarehouseTransactionRepositoryImpl implements WarehouseTransaction
         warehouseTransactionLists = tuples.stream().map(tuple -> {
             WarehouseTransactionList warehouseTransactionList = new WarehouseTransactionList();
             warehouseTransactionList.setId(tuple.get("id", Long.class));
-            warehouseTransactionList.setCompanyId(tuple.get("companyId", Integer.class));
+            warehouseTransactionList.setCompanyId(tuple.get("companyId", Long.class));
             warehouseTransactionList.setNo(tuple.get("no", String.class));
             warehouseTransactionList.setDate(tuple.get("date", ZonedDateTime.class));
             warehouseTransactionList.setDescription(tuple.get("description", String.class));

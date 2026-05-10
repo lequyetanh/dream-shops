@@ -39,7 +39,7 @@ public class OrderConsumer {
     @RabbitListener(queues = "create-order-queue")
     public void handle(Message message, Integer taskLogId, Channel channel) throws InterruptedException, IOException, ExecutionException {
         System.out.println("Handle message: " + taskLogId);
-        Thread.sleep(1000L);
+//        Thread.sleep(1000L);
         TaskLog taskLog = getTaskLogById(taskLogId).get();
         if(taskLog == null) {
             log.error("Tasklog {} is not found", taskLogId);
