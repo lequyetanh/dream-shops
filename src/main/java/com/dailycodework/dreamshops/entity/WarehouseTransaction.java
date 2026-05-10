@@ -18,7 +18,7 @@ public class WarehouseTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "company_id")
-    private Integer companyId;
+    private Long companyId;
     private String no;
     private ZonedDateTime date;
     private String description;

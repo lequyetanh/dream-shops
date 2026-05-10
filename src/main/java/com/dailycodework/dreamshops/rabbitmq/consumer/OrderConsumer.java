@@ -7,6 +7,7 @@ import com.dailycodework.dreamshops.repository.order.IOrderRepository;
 import com.dailycodework.dreamshops.repository.takeLog.ITaskLogRepository;
 import com.dailycodework.dreamshops.service.order.OrderService;
 import com.dailycodework.dreamshops.service.taskLog.TaskLogService;
+import com.dailycodework.dreamshops.service.warehouseTransaction.WarehouseTransactionService;
 import com.dailycodework.dreamshops.util.Common;
 import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class OrderConsumer {
     private final TaskLogService taskLogService;
     private final ITaskLogRepository taskLogRepository;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
+    private final WarehouseTransactionService warehouseTransactionService;
 
     @RabbitListener(queues = "create-order-queue")
     public void handle(Message message, Integer taskLogId, Channel channel) throws InterruptedException, IOException, ExecutionException {
@@ -49,6 +51,7 @@ public class OrderConsumer {
             Order order = new Order();
             List<Order> listOrder = orderRepository.findByIdIn(content.getBillIds());
             System.out.println(listOrder);
+            warehouseTransactionService.createWarehouseTransactionFromListOrder(listOrder);
 //            ==========================================================
         }catch(Exception e){
             log.error(

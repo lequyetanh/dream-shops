@@ -1,6 +1,8 @@
 package com.dailycodework.dreamshops.service.warehouseTransaction;
 
 import com.dailycodework.dreamshops.constant.ResultNotify;
+import com.dailycodework.dreamshops.entity.Order;
+import com.dailycodework.dreamshops.entity.OrderProduct;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.warehouseTransaction.WarehouseTransactionDetailReq;
 import com.dailycodework.dreamshops.payload.dto.warehouseTransaction.WarehouseTransactionList;
@@ -8,6 +10,8 @@ import com.dailycodework.dreamshops.payload.dto.warehouseTransaction.WarehouseTr
 import com.dailycodework.dreamshops.entity.WarehouseTransaction;
 import com.dailycodework.dreamshops.entity.WarehouseTransactionDetail;
 import com.dailycodework.dreamshops.repository.warehouseTransaction.IWarehouseTransactionRepository;
+import com.dailycodework.dreamshops.service.sequence.SequenceService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -20,8 +24,10 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class WarehouseTransactionService implements IWarehouseTransactionService {
     private final IWarehouseTransactionRepository warehouseTransactionRepository;
+    private final SequenceService sequenceService;
 
     @Override
     public BaseResultDTO getWarehouseTransaction(
@@ -93,4 +99,24 @@ public class WarehouseTransactionService implements IWarehouseTransactionService
                 null
         );
     };
+
+    public BaseResultDTO createWarehouseTransactionFromListOrder(List<Order> orders){
+        for(Order order: orders){
+            WarehouseTransaction warehouseTransaction = new WarehouseTransaction();
+            warehouseTransaction.setCompanyId(order.getCompanyId());
+            warehouseTransaction.setNo(sequenceService.getSequenceCode(order.getCompanyId(), "XK"));
+            warehouseTransaction.setDescription(order.getDescription());
+            List<WarehouseTransactionDetail> productList = new ArrayList<>();
+            for(OrderProduct orderProduct : order.getProducts()){
+                WarehouseTransactionDetail warehouseTransactionDetail = new WarehouseTransactionDetail();
+                warehouseTransactionDetail.setProductId(orderProduct.getProductId());
+                warehouseTransactionDetail.setQuantity(orderProduct.getQuantity());
+                warehouseTransactionDetail.setWarehouseTransaction(warehouseTransaction);
+                productList.add(warehouseTransactionDetail);
+            }
+            warehouseTransaction.setWarehouseTransactionDetail(productList);
+            warehouseTransactionRepository.save(warehouseTransaction);
+        }
+        return null;
+    }
 }
