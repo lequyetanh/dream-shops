@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -105,6 +106,7 @@ public class WarehouseTransactionService implements IWarehouseTransactionService
             WarehouseTransaction warehouseTransaction = new WarehouseTransaction();
             warehouseTransaction.setCompanyId(order.getCompanyId());
             warehouseTransaction.setNo(sequenceService.getSequenceCode(order.getCompanyId(), "XK"));
+            warehouseTransaction.setDate(ZonedDateTime.now());
             warehouseTransaction.setDescription(order.getDescription());
             List<WarehouseTransactionDetail> productList = new ArrayList<>();
             for(OrderProduct orderProduct : order.getProducts()){
