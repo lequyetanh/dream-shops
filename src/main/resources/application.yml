@@ -43,3 +43,8 @@ spring:
     producer:
       reply-timeout: 60000
       direct-exchange: amq.direct
+
+jwt:
+  # Base64 của chuỗi >= 32 bytes. Thay bằng giá trị riêng khi deploy production.
+  secret: ZHJlYW1TaG9wc1NlY3JldEtleUZvckp3dFRva2VuR2VuZXJhdGlvbjIwMjU=
+  expiration: 86400000   # 24 giờ (ms)
