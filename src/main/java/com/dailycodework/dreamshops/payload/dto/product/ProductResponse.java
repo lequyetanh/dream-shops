@@ -14,6 +14,7 @@ public class ProductResponse {
     private BigDecimal inPrice;
     private BigDecimal outPrice;
     private Long companyId;
+    private Integer stockQuantity;
 
     ProductResponse(
             Long id,
@@ -23,7 +24,8 @@ public class ProductResponse {
             String image,
             BigDecimal inPrice,
             BigDecimal outPrice,
-            Long companyId
+            Long companyId,
+            Integer stockQuantity
     ){
         this.id = id;
         this.name = name;
@@ -33,5 +35,6 @@ public class ProductResponse {
         this.inPrice = inPrice;
         this.outPrice = outPrice;
         this.companyId = companyId;
+        this.stockQuantity = stockQuantity;
     }
 }

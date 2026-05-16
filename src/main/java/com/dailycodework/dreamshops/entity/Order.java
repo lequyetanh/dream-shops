@@ -75,7 +75,7 @@ public class Order {
     }
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     private List<OrderProduct> products;
 

@@ -15,6 +15,7 @@ public class ProductInfo {
     private BigDecimal inPrice;
     private BigDecimal outPrice;
     private Long companyId;
+    private Integer stockQuantity;
 
     private List<Long> categoryIds;
 }

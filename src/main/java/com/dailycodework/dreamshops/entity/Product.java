@@ -26,7 +26,8 @@ import java.util.List;
                         @ColumnResult(name = "image", type = String.class),
                         @ColumnResult(name = "inPrice", type = BigDecimal.class),
                         @ColumnResult(name = "outPrice", type = BigDecimal.class),
-                        @ColumnResult(name = "companyId", type = Long.class)
+                        @ColumnResult(name = "companyId", type = Long.class),
+                        @ColumnResult(name = "stockQuantity", type = Integer.class)
                     }
                 )
             }
@@ -47,6 +48,8 @@ public class Product {
     private BigDecimal outPrice;
     @Column(name = "company_id")
     private Long companyId;
+    @Column(name = "stock_quantity")
+    private Integer stockQuantity;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

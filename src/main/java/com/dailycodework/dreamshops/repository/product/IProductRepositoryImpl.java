@@ -47,7 +47,8 @@ public class IProductRepositoryImpl implements ProductRepositoryCustom {
         Query query = entityManager.createNativeQuery(
                 "select " +
                     "p.id, p.name, p.description, p.barcode, " +
-                    "p.image, p.in_price inPrice, p.out_price outPrice, p.company_id companyId " +
+                    "p.image, p.in_price inPrice, p.out_price outPrice, p.company_id companyId, " +
+                    "p.stock_quantity stockQuantity " +
                     sql,
                 "ProductResponse"
         );
