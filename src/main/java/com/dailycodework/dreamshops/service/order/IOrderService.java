@@ -17,5 +17,6 @@ public interface IOrderService {
     public BaseResultDTO findById(Long id);
     public BaseResultDTO createOrder(OrderInfo orderReq);
     public BaseResultDTO updateOrder(OrderInfo orderReq);
+    public BaseResultDTO updateOrderStatus(Long id, Integer status);
     public BaseResultDTO deleteOrder(Long id);
 }

@@ -32,6 +32,7 @@ public class OrderService implements IOrderService {
     private final IProductRepository productRepository;
     private final OrderProducer orderProducer;
     private final TaskLogService taskLogService;
+    private final OrderWebSocketService orderWebSocketService;
 
     @Override
     public BaseResultDTO getOrderWithPaging(
@@ -44,13 +45,7 @@ public class OrderService implements IOrderService {
             Integer companyId
     ){
         Page<OrderInfo> orderList = orderRepository.getOrderWithPaging(
-                pageable,
-                keyword,
-                fromDate,
-                toDate,
-                orderCode,
-                status,
-                companyId
+                pageable, keyword, fromDate, toDate, orderCode, status, companyId
         );
         return new BaseResultDTO(
                 ResultNotify.successGet,
@@ -63,15 +58,8 @@ public class OrderService implements IOrderService {
     @Override
     public BaseResultDTO findById(Long id){
         Optional<Order> order = orderRepository.findById(id);
-        return order.map(value -> new BaseResultDTO(
-                ResultNotify.successGet,
-                true,
-                value
-        )).orElseGet(() -> new BaseResultDTO(
-                ResultNotify.notFound,
-                false,
-                null
-        ));
+        return order.map(value -> new BaseResultDTO(ResultNotify.successGet, true, value))
+                .orElseGet(() -> new BaseResultDTO(ResultNotify.notFound, false, null));
     }
 
     @Override
@@ -98,11 +86,9 @@ public class OrderService implements IOrderService {
         taskLogService.createTaskLog(taskLog);
         orderProducer.createOrderQueue(taskLog.getId());
 
-        return new BaseResultDTO(
-                ResultNotify.successCreate,
-                true,
-                order
-        );
+        orderWebSocketService.notifyOrderCreated(order);
+
+        return new BaseResultDTO(ResultNotify.successCreate, true, order);
     }
 
     @Override
@@ -113,13 +99,9 @@ public class OrderService implements IOrderService {
         }
         Order order = existingOrderOpt.get();
 
-        // Hoàn trả tồn kho sản phẩm cũ trước khi cập nhật
         restoreStock(order.getProducts());
-
-        // Xóa sản phẩm cũ (orphanRemoval tự xóa khỏi DB)
         order.getProducts().clear();
 
-        // Thêm sản phẩm mới
         List<OrderProduct> productList = new ArrayList<>();
         for (OrderProductReq prod : orderReq.getOrderProductList()) {
             OrderProduct orderProduct = new OrderProduct();
@@ -141,8 +123,24 @@ public class OrderService implements IOrderService {
         order.getProducts().addAll(productList);
         orderRepository.save(order);
 
-        // Trừ tồn kho theo danh sách sản phẩm mới
         deductStock(orderReq.getOrderProductList());
+
+        orderWebSocketService.notifyOrderUpdated(order);
+
+        return new BaseResultDTO(ResultNotify.successUpdate, true, order);
+    }
+
+    @Override
+    public BaseResultDTO updateOrderStatus(Long id, Integer status){
+        Optional<Order> existingOrderOpt = orderRepository.findById(id);
+        if (existingOrderOpt.isEmpty()) {
+            return new BaseResultDTO(ResultNotify.notFound, false, null);
+        }
+        Order order = existingOrderOpt.get();
+        order.setStatus(status);
+        orderRepository.save(order);
+
+        orderWebSocketService.notifyOrderStatusChanged(order);
 
         return new BaseResultDTO(ResultNotify.successUpdate, true, order);
     }
@@ -150,13 +148,12 @@ public class OrderService implements IOrderService {
     @Override
     public BaseResultDTO deleteOrder(Long id){
         Optional<Order> existingOrderOpt = orderRepository.findById(id);
-        existingOrderOpt.ifPresent(order -> restoreStock(order.getProducts()));
+        existingOrderOpt.ifPresent(order -> {
+            restoreStock(order.getProducts());
+            orderWebSocketService.notifyOrderDeleted(id, order.getCompanyId());
+        });
         orderRepository.deleteById(id);
-        return new BaseResultDTO(
-                ResultNotify.successDelete,
-                true,
-                null
-        );
+        return new BaseResultDTO(ResultNotify.successDelete, true, null);
     }
 
     private void deductStock(List<OrderProductReq> products) {
