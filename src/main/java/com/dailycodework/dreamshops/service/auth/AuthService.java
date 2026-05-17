@@ -52,6 +52,16 @@ public class AuthService {
     }
 
     public BaseResultDTO login(LoginRequest req) {
+//        Đây là bước:
+//        Spring Security kiểm tra tài khoản/mật khẩu có đúng không.
+//                Nó sẽ làm gì bên trong?
+//                Spring Security sẽ:
+//        tìm user trong DB
+//        lấy password đã mã hoá
+//        compare password
+//        kiểm tra account lock/disable
+//        nếu đúng → authenticate thành công
+//        nếu sai → throw exception
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(req.getUsername(), req.getPassword())

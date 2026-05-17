@@ -37,6 +37,7 @@ public class SecurityConfig {
                 // Tất cả API còn lại phải có token hợp lệ
                 .anyRequest().authenticated()
             )
+//                server không lưu session login.
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
@@ -48,8 +49,7 @@ public class SecurityConfig {
 
     @Bean
     AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
     }
@@ -64,3 +64,17 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
+
+//Request tới
+//   ↓
+//JWT Filter chạy
+//   ↓
+//Lấy Bearer token
+//   ↓
+//Validate token
+//   ↓
+//Load user
+//   ↓
+//Set Authentication vào SecurityContext
+//   ↓
+//Request đi tiếp tới Controller

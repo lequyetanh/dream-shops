@@ -40,6 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             final String username = jwtService.extractUsername(jwt);
 
+//            Kiểm tra user đã login trong SecurityContext chưa tránh set authentication nhiều lần
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
@@ -49,6 +50,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     userDetails, null, userDetails.getAuthorities()
                             );
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                    Đăng nhập user vào Spring Security Context
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
