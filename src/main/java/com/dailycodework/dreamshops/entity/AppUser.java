@@ -1,6 +1,10 @@
 package com.dailycodework.dreamshops.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,26 +27,35 @@ public class AppUser implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(max = 100)
     @Column(unique = true, nullable = false, length = 100)
     private String username;
 
+    @NotBlank
     @Column(nullable = false)
     private String password;
 
+    @Email
+    @Size(max = 100)
     @Column(length = 100)
     private String email;
 
+    @Size(max = 200)
     @Column(name = "full_name", length = 200)
     private String fullName;
 
-    @Column(name = "company_id")
+    @NotNull
+    @Column(name = "company_id", nullable = false)
     private Long companyId;
 
-    // ADMIN | MANAGER | USER
+    @NotBlank
+    @Size(max = 50)
     @Column(nullable = false, length = 50)
     private String role;
 
     @Builder.Default
+    @Column(nullable = false)
     private Boolean active = true;
 
     @Column(name = "created_at")
