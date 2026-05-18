@@ -4,7 +4,7 @@ import com.dailycodework.dreamshops.entity.Order;
 import com.dailycodework.dreamshops.entity.TaskLog;
 import com.dailycodework.dreamshops.payload.dto.taskLog.Content;
 import com.dailycodework.dreamshops.repository.order.IOrderRepository;
-import com.dailycodework.dreamshops.repository.takeLog.ITaskLogRepository;
+import com.dailycodework.dreamshops.repository.taskLog.ITaskLogRepository;
 import com.dailycodework.dreamshops.service.order.OrderService;
 import com.dailycodework.dreamshops.service.taskLog.TaskLogService;
 import com.dailycodework.dreamshops.service.warehouseTransaction.WarehouseTransactionService;

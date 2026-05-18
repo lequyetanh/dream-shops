@@ -4,7 +4,7 @@ import com.dailycodework.dreamshops.constant.ResultNotify;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.entity.TaskLog;
 import com.dailycodework.dreamshops.rabbitmq.producer.OrderProducer;
-import com.dailycodework.dreamshops.repository.takeLog.ITaskLogRepository;
+import com.dailycodework.dreamshops.repository.taskLog.ITaskLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
