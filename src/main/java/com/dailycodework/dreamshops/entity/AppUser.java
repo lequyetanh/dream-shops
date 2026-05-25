@@ -10,7 +10,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.dailycodework.dreamshops.constant.PermissionConstant;
+
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -63,7 +66,32 @@ public class AppUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
+        authorities.addAll(resolvePermissions(role));
+        return authorities;
+    }
+
+    private static List<GrantedAuthority> resolvePermissions(String role) {
+        List<GrantedAuthority> perms = new ArrayList<>();
+        if (role == null) return perms;
+        switch (role.toUpperCase()) {
+            case "ADMIN" -> {
+                perms.add(new SimpleGrantedAuthority(PermissionConstant.PRODUCT_VIEW));
+                perms.add(new SimpleGrantedAuthority(PermissionConstant.PRODUCT_CREATE));
+                perms.add(new SimpleGrantedAuthority(PermissionConstant.PRODUCT_UPDATE));
+                perms.add(new SimpleGrantedAuthority(PermissionConstant.PRODUCT_DELETE));
+            }
+            case "MANAGER" -> {
+                perms.add(new SimpleGrantedAuthority(PermissionConstant.PRODUCT_VIEW));
+                perms.add(new SimpleGrantedAuthority(PermissionConstant.PRODUCT_CREATE));
+                perms.add(new SimpleGrantedAuthority(PermissionConstant.PRODUCT_UPDATE));
+            }
+            case "USER" -> {
+                perms.add(new SimpleGrantedAuthority(PermissionConstant.PRODUCT_VIEW));
+            }
+        }
+        return perms;
     }
 
     @Override public boolean isAccountNonExpired()     { return true; }
