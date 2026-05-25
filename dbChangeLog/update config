@@ -1,0 +1,42 @@
+-- Add config for qr_invoice
+INSERT INTO config (
+    company_id, code, value, description, create_time, update_time, updater, creator, test, platform
+)
+SELECT
+    id AS company_id,
+    'customer_export_invoice' AS code,
+    1 AS value,
+    N'Cho phép khách chủ động yêu cầu hàng xuất hóa đơn/điều chỉnh thông tin qua QR bill - 0: Không - 1: Có (mặc định)' AS description,
+    GETDATE() AS create_time,
+    GETDATE() AS update_time,
+    0 AS updater,
+    0 AS creator,
+    null AS test,
+    null AS platform
+FROM company
+WHERE id NOT IN (
+    SELECT DISTINCT c.company_id
+    FROM config c
+    WHERE c.code = 'customer_export_invoice'
+);
+
+INSERT INTO config (
+    company_id, code, value, description, create_time, update_time, updater, creator, test, platform
+)
+SELECT
+    id AS company_id,
+    'time_update_bill' AS code,
+    null AS value,
+    N'Thời gian cho phép khách chủ cập nhật thông tin đơn hàng trước khi xuất hóa đơn (hh:mm:ss)' AS description,
+    GETDATE() AS create_time,
+    GETDATE() AS update_time,
+    0 AS updater,
+    0 AS creator,
+    null AS test,
+    null AS platform
+FROM company
+WHERE id NOT IN (
+    SELECT DISTINCT c.company_id
+    FROM config c
+    WHERE c.code = 'time_update_bill'
+);
