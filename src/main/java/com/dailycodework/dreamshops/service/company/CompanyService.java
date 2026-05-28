@@ -1,11 +1,14 @@
 package com.dailycodework.dreamshops.service.company;
 
+import com.dailycodework.dreamshops.constant.ConfigConstant;
 import com.dailycodework.dreamshops.constant.ResultNotify;
+import com.dailycodework.dreamshops.entity.Config;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.company.CompanyInfo;
 import com.dailycodework.dreamshops.payload.dto.company.UserLogin;
 import com.dailycodework.dreamshops.entity.Company;
 import com.dailycodework.dreamshops.repository.company.ICompanyRepository;
+import com.dailycodework.dreamshops.repository.config.IConfigRepository;
 import com.dailycodework.dreamshops.service.RedisManagementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -13,12 +16,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CompanyService implements ICompanyService {
     private final ICompanyRepository companyRepository;
+    private final IConfigRepository configRepository;
     public final RedisManagementService redisManagementService;
     private final ObjectMapper objectMapper;
 
@@ -69,6 +75,27 @@ public class CompanyService implements ICompanyService {
         BeanUtils.copyProperties(companyReq, company);
         company.setExtra(objectMapper.writeValueAsString(companyReq.getExtra()));
         companyRepository.save(company);
+
+        List<Config> defaultConfigs = configRepository.findAllByCompanyIdAndCodes(
+                1L,
+                Arrays.asList(
+                        ConfigConstant.INVOICE_TYPE,
+                        ConfigConstant.TAXI_CONFIG,
+                        ConfigConstant.TYPE_DISCOUNT,
+                        ConfigConstant.VOUCHER_APPLY,
+                        ConfigConstant.SEPARATOR,
+                        ConfigConstant.CURRENCY_DENOMINATION_CONFIGURATION
+                )
+        );
+        for (Config defaultConfig : defaultConfigs) {
+            Config newConfig = new Config();
+            newConfig.setCompanyId(company.getId());
+            newConfig.setCode(defaultConfig.getCode());
+            newConfig.setValue(defaultConfig.getValue());
+            newConfig.setDescription(defaultConfig.getDescription());
+            configRepository.save(newConfig);
+        }
+
         return new BaseResultDTO(
                 ResultNotify.successCreate,
                 true,
