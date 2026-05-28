@@ -1,25 +1,3 @@
--- Add config for qr_invoice
-INSERT INTO config (
-    company_id, code, value, description, create_time, update_time, updater, creator, test, platform
-)
-SELECT
-    id AS company_id,
-    'customer_export_invoice' AS code,
-    1 AS value,
-    N'Cho phép khách chủ động yêu cầu hàng xuất hóa đơn/điều chỉnh thông tin qua QR bill - 0: Không - 1: Có (mặc định)' AS description,
-    GETDATE() AS create_time,
-    GETDATE() AS update_time,
-    0 AS updater,
-    0 AS creator,
-    null AS test,
-    null AS platform
-FROM company
-WHERE id NOT IN (
-    SELECT DISTINCT c.company_id
-    FROM config c
-    WHERE c.code = 'customer_export_invoice'
-);
-
 INSERT INTO config (
     company_id, code, value, description, create_time, update_time, updater, creator, test, platform
 )
@@ -40,3 +18,61 @@ WHERE id NOT IN (
     FROM config c
     WHERE c.code = 'time_update_bill'
 );
+
+=====================================================================================
+INSERT INTO config (
+    code, company_id, description, value
+)
+SELECT
+    'invoice_type' AS code,
+    1 AS company_id,
+    N'Loại hình hóa đơn
+    0- Hóa đơn bán hàng
+    1- Hóa đơn GTGT một thuế
+    2- Hóa đơn GTGT nhiều thuế' AS description,
+    0 AS value
+
+
+INSERT INTO config (code, company_id, description, value)
+SELECT 'taxi_config'                                                                                                                                                                                                                            AS code,
+       1                                                                                                                                                                                                                                        AS company_id,
+       N'Cấu hình taxi'                                                                                                                                                                                                                         AS description,
+       N'{"tripInfo":[{"code":"licensePlates","name":"Biển kiểm soát","value":null,"invoiceCode":"BKSPVTChuyen","isDisplay":true},{"code":"destination","name":"Điểm đến","value":null,"invoiceCode":"THHDVu","isDisplay":true}],"saleType":1}' AS value
+
+
+INSERT INTO config (code, company_id, description, value)
+SELECT 'type_discount'        AS code,
+       1                      AS company_id,
+       N'0- Không giảm giá
+   1- Giảm giá theo sản phẩm
+   2- Giảm giá theo đơn hàng
+   3- Giảm giá cả 2 loại' AS description,
+       1                      AS value
+
+INSERT INTO config (
+    code, company_id, description, value
+)
+SELECT
+    'voucher_apply' AS code,
+    1 AS company_id,
+    N'Áp dụng chương trình khuyến mại hay không: 0 - Không áp dụng, 1 - Áp dụng' AS description,
+    1 AS value
+
+INSERT INTO config (
+    code, company_id, description, value
+)
+SELECT
+    'separator' AS code,
+    1 AS company_id,
+    N'Cấu hình dấu ngăn cách phần nghìn(Mặc định là dấu chấm), dấu ngăn cách phần thập phân(Mặc đinh là dấu phẩy) ' AS description,
+    N'{"thousand":".","decimal":","}' AS value
+
+
+INSERT INTO config (
+    code, company_id, description, value
+)
+SELECT
+    'currency_denomination_configuration' AS code,
+    1 AS company_id,
+    N'Cấu hình mệnh giá xăng dầu' AS description,
+    N'{"money":[30000,50000,100000,150000,200000,500000],"liter":[5.0,10.0,15.0,20.0,30.0,50.0]}' AS value

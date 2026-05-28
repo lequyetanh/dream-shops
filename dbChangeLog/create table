@@ -133,3 +133,5 @@
       description NVARCHAR(500)
   );
 
+ALTER TABLE config
+ALTER COLUMN description NVARCHAR(500);
