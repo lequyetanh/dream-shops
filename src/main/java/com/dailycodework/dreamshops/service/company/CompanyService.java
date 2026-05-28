@@ -12,6 +12,7 @@ import com.dailycodework.dreamshops.repository.config.IConfigRepository;
 import com.dailycodework.dreamshops.service.RedisManagementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
@@ -19,6 +20,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,12 +31,15 @@ public class CompanyService implements ICompanyService {
     private final ObjectMapper objectMapper;
 
     @Override
-    public BaseResultDTO getCompanyWithPaging(
-            Pageable pageable,
-            String keyword
-    ){
-        return null;
-    };
+    public BaseResultDTO getCompanyWithPaging(Pageable pageable, String keyword) {
+        Page<Company> page = companyRepository.getWithPaging(pageable, keyword);
+        List<CompanyInfo> result = page.getContent().stream().map(company -> {
+            CompanyInfo info = new CompanyInfo();
+            BeanUtils.copyProperties(company, info);
+            return info;
+        }).collect(Collectors.toList());
+        return new BaseResultDTO(ResultNotify.successGet, true, result, (int) page.getTotalElements());
+    }
     @Override
     public BaseResultDTO findById(Long id){
         CompanyInfo companyReturn = new CompanyInfo();

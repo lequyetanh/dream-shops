@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ICompanyRepository extends CrudRepository<Company, Long> {
+public interface ICompanyRepository extends CrudRepository<Company, Long>, CompanyRepositoryCustom {
     Optional<Company> findCompanyById(Long id);
-
 }
