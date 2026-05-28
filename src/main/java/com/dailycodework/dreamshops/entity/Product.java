@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.entity;
+﻿package com.dailycodework.dreamshops.entity;
 
 import com.dailycodework.dreamshops.payload.dto.product.ProductResponse;
 import jakarta.persistence.*;
@@ -56,17 +56,14 @@ public class Product {
     @Column(length = 500)
     private String image;
 
-    @NotNull
     @PositiveOrZero
     @Column(name = "in_price", nullable = false, precision = 19, scale = 2)
     private BigDecimal inPrice;
 
-    @NotNull
     @PositiveOrZero
     @Column(name = "out_Price", nullable = false, precision = 19, scale = 2)
     private BigDecimal outPrice;
 
-    @NotNull
     @Column(name = "company_id", nullable = false)
     private Long companyId;
 

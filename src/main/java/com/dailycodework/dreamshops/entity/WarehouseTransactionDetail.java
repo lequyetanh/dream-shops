@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.entity;
+﻿package com.dailycodework.dreamshops.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -15,21 +15,17 @@ public class WarehouseTransactionDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    @NotNull
     @Positive
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal quantity;
 
-    @NotNull
     @PositiveOrZero
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal price;
 
-    @NotNull
     @PositiveOrZero
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;

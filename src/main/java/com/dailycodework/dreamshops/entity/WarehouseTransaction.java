@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.entity;
+﻿package com.dailycodework.dreamshops.entity;
 
 import com.dailycodework.dreamshops.constant.BaseConstant;
 import com.dailycodework.dreamshops.util.Common;
@@ -19,7 +19,6 @@ public class WarehouseTransaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @Column(name = "company_id", nullable = false)
     private Long companyId;
 
@@ -27,7 +26,6 @@ public class WarehouseTransaction {
     @Column(length = 100)
     private String no;
 
-    @NotNull
     @Column(nullable = false)
     private ZonedDateTime date;
 
@@ -46,7 +44,6 @@ public class WarehouseTransaction {
     @Column(name = "vat_amount")
     private Integer vatAmount;
 
-    @NotNull
     @PositiveOrZero
     @Column(name = "total_amount", nullable = false, precision = 19, scale = 2)
     private BigDecimal totalAmount;

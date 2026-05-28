@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.entity;
+﻿package com.dailycodework.dreamshops.entity;
 
 import com.dailycodework.dreamshops.payload.dto.customer.CustomerInfo;
 import jakarta.persistence.*;
@@ -60,7 +60,6 @@ public class Customer {
     @Min(0)
     private Integer type;
 
-    @NotNull
     @Column(name = "company_id", nullable = false)
     private Long companyId;
 }

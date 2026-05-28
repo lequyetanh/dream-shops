@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.entity;
+﻿package com.dailycodework.dreamshops.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -15,7 +15,6 @@ public class OrderProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
@@ -24,12 +23,10 @@ public class OrderProduct {
     @Column(name = "product_name", nullable = false, length = 255)
     private String productName;
 
-    @NotNull
     @PositiveOrZero
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal price;
 
-    @NotNull
     @Positive
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal quantity;
@@ -46,7 +43,6 @@ public class OrderProduct {
     @Column(name = "vat_amount", precision = 19, scale = 2)
     private BigDecimal vatAmount;
 
-    @NotNull
     @PositiveOrZero
     @Column(name = "total_price", nullable = false, precision = 19, scale = 2)
     private BigDecimal totalPrice;

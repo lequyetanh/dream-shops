@@ -1,4 +1,4 @@
-package com.dailycodework.dreamshops.entity;
+﻿package com.dailycodework.dreamshops.entity;
 
 import com.dailycodework.dreamshops.constant.BaseConstant;
 import com.dailycodework.dreamshops.payload.dto.order.OrderInfo;
@@ -51,11 +51,9 @@ public class Order {
     @Column(length = 100)
     private String code;
 
-    @NotNull
     @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
-    @NotNull
     @Column(name = "order_date", nullable = false)
     private ZonedDateTime orderDate;
 
@@ -74,12 +72,10 @@ public class Order {
     @Column(name = "vat_amount", precision = 19, scale = 2)
     private BigDecimal vatAmount;
 
-    @NotNull
     @PositiveOrZero
     @Column(name = "total_amount", nullable = false, precision = 19, scale = 2)
     private BigDecimal totalAmount;
 
-    @NotNull
     @Column(name = "company_id", nullable = false)
     private Long companyId;
 
