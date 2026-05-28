@@ -20,7 +20,6 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,13 +31,13 @@ public class CompanyService implements ICompanyService {
 
     @Override
     public BaseResultDTO getCompanyWithPaging(Pageable pageable, String keyword) {
-        Page<Company> page = companyRepository.getWithPaging(pageable, keyword);
-        List<CompanyInfo> result = page.getContent().stream().map(company -> {
-            CompanyInfo info = new CompanyInfo();
-            BeanUtils.copyProperties(company, info);
-            return info;
-        }).collect(Collectors.toList());
-        return new BaseResultDTO(ResultNotify.successGet, true, result, (int) page.getTotalElements());
+        Page<CompanyInfo> page = companyRepository.getWithPaging(pageable, keyword);
+        return new BaseResultDTO(
+                ResultNotify.successGet,
+                true,
+                page.getContent(),
+                (int) page.getTotalElements()
+        );
     }
     @Override
     public BaseResultDTO findById(Long id){
