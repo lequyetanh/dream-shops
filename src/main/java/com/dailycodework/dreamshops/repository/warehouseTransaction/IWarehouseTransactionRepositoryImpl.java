@@ -88,7 +88,6 @@ public class IWarehouseTransactionRepositoryImpl implements WarehouseTransaction
         return new PageImpl<>(results, pageable, totalItem);
     }
 
-    @Override
     public Page<WarehouseTransactionList> getWarehouseTransactionWithPaging2(
             Pageable pageable,
             String keyword,
