@@ -1,8 +1,8 @@
 package com.dailycodework.dreamshops.controller;
 
 import com.dailycodework.dreamshops.constant.ExceptionConstant;
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.category.CategoryInfo;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.category.CategoryInfo;
 import com.dailycodework.dreamshops.service.category.CategoryService;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Pageable;
@@ -25,12 +25,10 @@ public class Category {
     @GetMapping("/category/get-with-paging")
     public ResponseEntity<BaseResultDTO> getCategoryWithPaging(
             Pageable pageable,
+            @RequestParam(required = false) Long companyId,
             @RequestParam(required = false) String keyword
-            ){
-        BaseResultDTO result = categoryService.getCategoryWithPaging(
-                pageable,
-                keyword
-        );
+    ) {
+        BaseResultDTO result = categoryService.getCategoryWithPaging(pageable, companyId, keyword);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

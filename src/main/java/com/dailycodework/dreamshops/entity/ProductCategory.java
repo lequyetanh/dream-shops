@@ -10,6 +10,10 @@ public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "product_id", nullable = false)
     private Long productId;
+
+    @Column(name = "category_id", nullable = false)
     private Long CategoryId;
 }

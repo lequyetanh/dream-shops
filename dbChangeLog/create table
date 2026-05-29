@@ -1,0 +1,137 @@
+ -- =============================================
+  -- dream-shops SQL Server DDL
+  -- =============================================
+
+  CREATE TABLE company (
+      id         BIGINT IDENTITY(1,1) PRIMARY KEY,
+      name       NVARCHAR(255),
+      address    NVARCHAR(500),
+      phone      NVARCHAR(50),
+      email      NVARCHAR(255),
+      website    NVARCHAR(255),
+      tax_code   NVARCHAR(100),
+      password   NVARCHAR(255),
+      extra      NVARCHAR(MAX)
+  );
+
+  CREATE TABLE app_user (
+      id          BIGINT IDENTITY(1,1) PRIMARY KEY,
+      username    NVARCHAR(100) NOT NULL UNIQUE,
+      password    NVARCHAR(255) NOT NULL,
+      email       NVARCHAR(100),
+      full_name   NVARCHAR(200),
+      company_id  BIGINT,
+      role        NVARCHAR(50)  NOT NULL,
+      active      BIT           DEFAULT 1,
+
+      created_at  DATETIMEOFFSET
+  );
+
+  CREATE TABLE category (
+      id          BIGINT IDENTITY(1,1) PRIMARY KEY,
+      name        NVARCHAR(255),
+      description NVARCHAR(500),
+      company_id  BIGINT
+  );
+
+  CREATE TABLE product (
+      id             BIGINT IDENTITY(1,1) PRIMARY KEY,
+      name           NVARCHAR(255),
+      description    NVARCHAR(MAX),
+      barcode        NVARCHAR(100),
+      image          NVARCHAR(500),
+      in_price       DECIMAL(19,2),
+      out_Price      DECIMAL(19,2),
+      company_id     BIGINT,
+      stock_quantity INT
+  );
+
+  -- Bảng join nhiều-nhiều Product <-> Category
+  CREATE TABLE product_category (
+      id          BIGINT IDENTITY(1,1) PRIMARY KEY,
+      product_id  BIGINT,
+      category_id BIGINT,
+      FOREIGN KEY (product_id)  REFERENCES product(id),
+      FOREIGN KEY (category_id) REFERENCES category(id)
+  );
+
+  CREATE TABLE customer (
+      id         BIGINT IDENTITY(1,1) PRIMARY KEY,
+      name       NVARCHAR(255),
+      code       NVARCHAR(100),
+      address    NVARCHAR(500),
+      email      NVARCHAR(255),
+      phone      NVARCHAR(50),
+      type       INT,
+      company_id BIGINT
+  );
+
+  CREATE TABLE orders (
+      id              BIGINT IDENTITY(1,1) PRIMARY KEY,
+      code            NVARCHAR(100),
+      customer_id     BIGINT,
+      order_date      DATETIMEOFFSET,
+      description     NVARCHAR(MAX),
+      discount_amount DECIMAL(19,2),
+      vat_rate        INT,
+      vat_amount      DECIMAL(19,2),
+      total_amount    DECIMAL(19,2),
+      company_id      BIGINT,
+      status          INT,
+      extra           NVARCHAR(MAX),
+      FOREIGN KEY (customer_id) REFERENCES customer(id)
+  );
+
+  CREATE TABLE order_product (
+      id              BIGINT IDENTITY(1,1) PRIMARY KEY,
+      product_id      BIGINT,
+      product_name    NVARCHAR(255),
+      price           DECIMAL(19,2),
+      quantity        DECIMAL(19,2),
+      discount_amount DECIMAL(19,2),
+      vat_rate        INT,
+      vat_amount      DECIMAL(19,2),
+      total_price     DECIMAL(19,2),
+      order_id        BIGINT NOT NULL,
+      FOREIGN KEY (order_id) REFERENCES orders(id)
+  );
+
+  CREATE TABLE warehouse_transaction (
+      id           BIGINT IDENTITY(1,1) PRIMARY KEY,
+      company_id   BIGINT,
+      no           NVARCHAR(100),
+      date         DATETIMEOFFSET,
+      description  NVARCHAR(MAX),
+      amount       DECIMAL(19,2),
+      vat_rate     INT,
+      vat_amount   INT,           -- entity dùng Integer (không phải BigDecimal)
+      total_amount DECIMAL(19,2)
+  );
+
+  CREATE TABLE warehouse_transaction_detail (
+      id                       BIGINT IDENTITY(1,1) PRIMARY KEY,
+      product_id               BIGINT,
+      quantity                 DECIMAL(19,2),
+      price                    DECIMAL(19,2),
+      amount                   DECIMAL(19,2),
+      warehouse_transaction_id BIGINT NOT NULL,
+      FOREIGN KEY (warehouse_transaction_id) REFERENCES warehouse_transaction(id)
+  );
+
+  CREATE TABLE task_log (
+      id         BIGINT IDENTITY(1,1) PRIMARY KEY,
+      company_id BIGINT,
+      type       NVARCHAR(100),
+      content    NVARCHAR(MAX)
+  );
+
+  CREATE TABLE config (
+      id          BIGINT IDENTITY(1,1) PRIMARY KEY,
+      company_id  BIGINT,
+      code        NVARCHAR(100),
+      value       NVARCHAR(MAX),
+      description NVARCHAR(500)
+  );
+
+ALTER TABLE config
+ALTER COLUMN description NVARCHAR(500);

@@ -6,17 +6,26 @@
 #spring.datasource.password=Sds@123
 #spring.datasource.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver
 
+#spring:
+#  datasource:
+#    url: jdbc:sqlserver://localhost:1433;databaseName=dreamShop;encrypt=true;trustServerCertificate=true;
+#    username: dream_user
+#    password: 123456
+#    type: com.microsoft.sqlserver.jdbc.SQLServerDataSource
+
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=dreamShop;encrypt=true;trustServerCertificate=true;
-    username: dream_user
-    password: 123456
+    url: jdbc:sqlserver://10.100.110.78:1433;databaseName=dream_test;encrypt=true;trustServerCertificate=true;
+    username: sa
+    password: Sds@123
     type: com.microsoft.sqlserver.jdbc.SQLServerDataSource
-#  datasource:
-#    url: jdbc:sqlserver://10.100.110.78:1433;databaseName=dream_test;encrypt=true;trustServerCertificate=true;
-#    username: sa
-#    password: Sds@123
-#    type: com.microsoft.sqlserver.jdbc.SQLServerDataSource
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
+        ddl-auto: update
+    generate-ddl: true
+    show-sql: true
   data:
     redis:
       host: 10.100.140.9
@@ -38,3 +47,7 @@ spring:
     producer:
       reply-timeout: 60000
       direct-exchange: amq.direct
+
+jwt:
+  secret: ZHJlYW1TaG9wc1NlY3JldEtleUZvckp3dFRva2VuR2VuZXJhdGlvbjIwMjU=
+  expiration: 86400000

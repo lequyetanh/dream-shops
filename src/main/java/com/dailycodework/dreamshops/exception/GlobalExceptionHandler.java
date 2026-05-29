@@ -1,6 +1,6 @@
 package com.dailycodework.dreamshops.exception;
 
-import com.dailycodework.dreamshops.dto.BaseBadRequestException;
+import com.dailycodework.dreamshops.payload.dto.BaseBadRequestException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

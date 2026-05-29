@@ -1,6 +1,11 @@
 package com.dailycodework.dreamshops.util;
 
 import com.dailycodework.dreamshops.constant.BaseConstant;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.base.Strings;
 import jakarta.persistence.Query;
 import jakarta.validation.constraints.NotNull;
@@ -14,11 +19,13 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class Common {
     private static final String ENTITY_NAME = "dream.shops.common";
     private static final Logger log = LoggerFactory.getLogger(ENTITY_NAME);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void setParamsWithPageable(
             @NotNull Query query,
@@ -77,5 +84,33 @@ public class Common {
         }
         return null;
     }
+
+    public static String toJsonString(Object object) {
+        if (Objects.nonNull(object)) {
+            try {
+                objectMapper.registerModule(new JavaTimeModule());
+                objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                return objectMapper.writeValueAsString(object);
+            } catch (JsonProcessingException e) {
+                log.error("[ERROR_CONVERT_OBJECT], exception message: {}", e.getMessage());
+                return "{}";
+            }
+        }
+        return "{}";
+    }
+
+    public static <T> T fromJsonString(String json, Class<T> clazz) {
+        if (Objects.nonNull(json) && !json.isBlank()) {
+            try {
+                objectMapper.registerModule(new JavaTimeModule());
+                objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+                return objectMapper.readValue(json, clazz);
+            } catch (JsonProcessingException e) {
+                log.error("[ERROR_PARSE_JSON], exception message: {}", e.getMessage());
+            }
+        }
+        return null;
+    }
+
 
 }

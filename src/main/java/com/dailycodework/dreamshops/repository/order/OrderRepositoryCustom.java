@@ -1,6 +1,6 @@
 package com.dailycodework.dreamshops.repository.order;
 
-import com.dailycodework.dreamshops.dto.order.OrderInfo;
+import com.dailycodework.dreamshops.payload.dto.order.OrderInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -11,6 +11,7 @@ public interface OrderRepositoryCustom {
             String fromDate,
             String toDate,
             String orderCode,
-            Integer status
+            Integer status,
+            Integer companyId
     );
 }

@@ -1,7 +1,7 @@
 package com.dailycodework.dreamshops.controller;
 
-import com.dailycodework.dreamshops.dto.BaseResultDTO;
-import com.dailycodework.dreamshops.dto.customer.CustomerInfo;
+import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
+import com.dailycodework.dreamshops.payload.dto.customer.CustomerInfo;
 import com.dailycodework.dreamshops.service.customer.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,12 +18,10 @@ public class Customer {
     @GetMapping("/customer/get-with-paging")
     public ResponseEntity<BaseResultDTO> getCustomerWithPaging(
             Pageable pageable,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long companyId
     ){
-        BaseResultDTO result = customerService.getCustomerWithPaging(
-                pageable,
-                keyword
-        );
+        BaseResultDTO result = customerService.getCustomerWithPaging(pageable, keyword, companyId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -48,6 +46,18 @@ public class Customer {
     @DeleteMapping("/customer/delete/{id}")
     public ResponseEntity<BaseResultDTO> deleteCustomer(@PathVariable(value = "id") Long id){
         BaseResultDTO result = customerService.deleteCustomer(id);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/customer/{customerId}/order-history")
+    public ResponseEntity<BaseResultDTO> getOrderHistory(@PathVariable Long customerId){
+        BaseResultDTO result = customerService.getOrderHistory(customerId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/customer/{customerId}/spending-summary")
+    public ResponseEntity<BaseResultDTO> getSpendingSummary(@PathVariable Long customerId){
+        BaseResultDTO result = customerService.getSpendingSummary(customerId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
