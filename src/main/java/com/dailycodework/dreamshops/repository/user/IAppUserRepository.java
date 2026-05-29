@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface IAppUserRepository extends CrudRepository<AppUser, Long> {
     Optional<AppUser> findByUsername(String username);
     boolean existsByUsername(String username);
+    java.util.List<AppUser> findByCompanyId(Long companyId);
 }
