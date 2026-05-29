@@ -5,12 +5,9 @@ import com.dailycodework.dreamshops.payload.dto.category.CategoryInfo;
 import org.springframework.data.domain.Pageable;
 
 public interface ICategoryService {
-    public BaseResultDTO getCategoryWithPaging(
-            Pageable pageable,
-            String keyword
-    );
-    public BaseResultDTO findById(Long id);
-    public BaseResultDTO createCategory(CategoryInfo categoryReq);
-    public BaseResultDTO updateCategory(CategoryInfo categoryReq);
-    public BaseResultDTO deleteCategory(Long id);
+    BaseResultDTO getCategoryWithPaging(Pageable pageable, Long companyId, String keyword);
+    BaseResultDTO findById(Long id);
+    BaseResultDTO createCategory(CategoryInfo categoryReq);
+    BaseResultDTO updateCategory(CategoryInfo categoryReq);
+    BaseResultDTO deleteCategory(Long id);
 }

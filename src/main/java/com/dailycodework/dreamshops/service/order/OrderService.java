@@ -159,12 +159,18 @@ public class OrderService implements IOrderService {
     private void deductStock(List<OrderProductReq> products) {
         for (OrderProductReq prod : products) {
             if (prod.getProductId() == null || prod.getQuantity() == null) continue;
-            productRepository.findById(prod.getProductId()).ifPresent(product -> {
+            Optional<com.dailycodework.dreamshops.entity.Product> productOpt = productRepository.findById(prod.getProductId());
+            if (productOpt.isPresent()) {
+                com.dailycodework.dreamshops.entity.Product product = productOpt.get();
                 if (product.getStockQuantity() != null) {
-                    product.setStockQuantity(product.getStockQuantity() - prod.getQuantity().intValue());
+                    int newQty = product.getStockQuantity() - prod.getQuantity().intValue();
+                    if (newQty < 0) {
+                        throw new RuntimeException("Sản phẩm '" + product.getName() + "' không đủ số lượng trong kho (còn " + product.getStockQuantity() + ")");
+                    }
+                    product.setStockQuantity(newQty);
                     productRepository.save(product);
                 }
-            });
+            }
         }
     }
 

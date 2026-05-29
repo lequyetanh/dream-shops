@@ -136,7 +136,15 @@ public class CompanyService implements ICompanyService {
     };
 
     @Override
-    public BaseResultDTO login(UserLogin userLogin){
-        return null;
+    public BaseResultDTO login(UserLogin userLogin) {
+        Optional<com.dailycodework.dreamshops.entity.Company> companyOpt = companyRepository.findByTaxCode(userLogin.getUserName());
+        if (companyOpt.isEmpty()) {
+            return new BaseResultDTO("Không tìm thấy công ty với mã số thuế này", false, null);
+        }
+        com.dailycodework.dreamshops.entity.Company company = companyOpt.get();
+        if (!userLogin.getPassword().equals(company.getPassword())) {
+            return new BaseResultDTO("Mật khẩu không đúng", false, null);
+        }
+        return new BaseResultDTO(ResultNotify.successGet, true, company);
     }
 }

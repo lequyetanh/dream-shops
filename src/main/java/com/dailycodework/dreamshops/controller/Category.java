@@ -25,12 +25,10 @@ public class Category {
     @GetMapping("/category/get-with-paging")
     public ResponseEntity<BaseResultDTO> getCategoryWithPaging(
             Pageable pageable,
+            @RequestParam(required = false) Long companyId,
             @RequestParam(required = false) String keyword
-            ){
-        BaseResultDTO result = categoryService.getCategoryWithPaging(
-                pageable,
-                keyword
-        );
+    ) {
+        BaseResultDTO result = categoryService.getCategoryWithPaging(pageable, companyId, keyword);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

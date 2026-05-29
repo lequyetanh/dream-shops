@@ -1,76 +1,66 @@
 package com.dailycodework.dreamshops.service.category;
 
 import com.dailycodework.dreamshops.constant.ResultNotify;
+import com.dailycodework.dreamshops.entity.Category;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.category.CategoryInfo;
-import com.dailycodework.dreamshops.entity.Category;
-import com.dailycodework.dreamshops.payload.mapper.category.CategoryMapper;
 import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
     private final ICategoryRepository categoryRepository;
-    private final CategoryMapper categoryMapper;
 
-    public CategoryService(
-            ICategoryRepository categoryRepository,
-            CategoryMapper categoryMapper
-    ) {
-        this.categoryRepository = categoryRepository;
-        this.categoryMapper = categoryMapper;
+    @Override
+    public BaseResultDTO getCategoryWithPaging(Pageable pageable, Long companyId, String keyword) {
+        Page<Category> page = categoryRepository.findWithPaging(companyId, keyword, pageable);
+        return new BaseResultDTO(ResultNotify.successGet, true, page.getContent(), (int) page.getTotalElements());
     }
 
     @Override
-    public BaseResultDTO getCategoryWithPaging(
-            Pageable pageable,
-            String keyword
-    ) {
-        List<Category> listCategory = categoryRepository.findAll();
-        return new BaseResultDTO(
-                ResultNotify.successCreate,
-                true,
-                listCategory
-        );
-    }
-
-    @Override
-    public BaseResultDTO findById(Long id){
-        String categoryName = categoryRepository.getNameById(id);
-        if(categoryName == null){
-            throw new RuntimeException("Không tìm thấy nhóm sản phẩm");
+    public BaseResultDTO findById(Long id) {
+        Optional<Category> category = categoryRepository.findById(id);
+        if (category.isEmpty()) {
+            throw new RuntimeException(ResultNotify.notFound);
         }
-        return new BaseResultDTO(
-                ResultNotify.successGet,
-                true,
-                categoryName
-        );
+        return new BaseResultDTO(ResultNotify.successGet, true, category.get());
     }
 
     @Override
     public BaseResultDTO createCategory(CategoryInfo categoryReq) {
-        Category category = categoryMapper.toCategory(categoryReq);
-//        Category category = new Category();
-//        category.setName(categoryReq.getName());
-//        category.setDescription(categoryReq.getDescription());
+        Category category = new Category();
+        category.setName(categoryReq.getName());
+        category.setDescription(categoryReq.getDescription());
+        category.setCompanyId(categoryReq.getCompanyId());
         categoryRepository.save(category);
-        return new BaseResultDTO(
-                ResultNotify.successCreate,
-                true,
-                null
-        );
+        return new BaseResultDTO(ResultNotify.successCreate, true, null);
     }
 
     @Override
     public BaseResultDTO updateCategory(CategoryInfo categoryReq) {
-        return null;
+        Optional<Category> existing = categoryRepository.findById(categoryReq.getId());
+        if (existing.isEmpty()) {
+            throw new RuntimeException(ResultNotify.notFound);
+        }
+        Category category = existing.get();
+        category.setName(categoryReq.getName());
+        category.setDescription(categoryReq.getDescription());
+        categoryRepository.save(category);
+        return new BaseResultDTO(ResultNotify.successUpdate, true, category);
     }
 
     @Override
     public BaseResultDTO deleteCategory(Long id) {
-        return null;
+        if (!categoryRepository.existsById(id)) {
+            throw new RuntimeException(ResultNotify.notFound);
+        }
+        categoryRepository.deleteById(id);
+        return new BaseResultDTO(ResultNotify.successDelete, true, null);
     }
 }

@@ -11,4 +11,5 @@ import java.util.Optional;
 @Repository
 public interface ICompanyRepository extends CrudRepository<Company, Long>, CompanyRepositoryCustom {
     Optional<Company> findCompanyById(Long id);
+    Optional<Company> findByTaxCode(String taxCode);
 }
