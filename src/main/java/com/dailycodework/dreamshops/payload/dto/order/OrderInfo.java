@@ -25,7 +25,7 @@ public class OrderInfo {
     private Long companyId;
     private Integer status;
     private String extra;
-    List<OrderProductReq> orderProductList;
+    List<OrderProductReq> products;
 
     OrderInfo(
             Long id,

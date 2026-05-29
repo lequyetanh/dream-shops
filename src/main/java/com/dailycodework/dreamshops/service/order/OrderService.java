@@ -66,7 +66,7 @@ public class OrderService implements IOrderService {
     public BaseResultDTO createOrder(OrderInfo orderReq){
         Order order = new Order();
         List<OrderProduct> productList = new ArrayList<>();
-        for (OrderProductReq prod : orderReq.getOrderProductList()) {
+        for (OrderProductReq prod : orderReq.getProducts()) {
             OrderProduct orderProduct = new OrderProduct();
             BeanUtils.copyProperties(prod, orderProduct);
             orderProduct.setOrder(order);
@@ -77,7 +77,7 @@ public class OrderService implements IOrderService {
         order.setOrderDate(orderReq.getOrderDate());
         orderRepository.save(order);
 
-        deductStock(orderReq.getOrderProductList());
+        deductStock(orderReq.getProducts());
 
         TaskLog taskLog = new TaskLog();
         Content content = new Content();
@@ -103,7 +103,7 @@ public class OrderService implements IOrderService {
         order.getProducts().clear();
 
         List<OrderProduct> productList = new ArrayList<>();
-        for (OrderProductReq prod : orderReq.getOrderProductList()) {
+        for (OrderProductReq prod : orderReq.getProducts()) {
             OrderProduct orderProduct = new OrderProduct();
             BeanUtils.copyProperties(prod, orderProduct);
             orderProduct.setOrder(order);
@@ -123,7 +123,7 @@ public class OrderService implements IOrderService {
         order.getProducts().addAll(productList);
         orderRepository.save(order);
 
-        deductStock(orderReq.getOrderProductList());
+        deductStock(orderReq.getProducts());
 
         orderWebSocketService.notifyOrderUpdated(order);
 
