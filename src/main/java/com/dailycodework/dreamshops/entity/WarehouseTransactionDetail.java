@@ -1,4 +1,4 @@
-﻿package com.dailycodework.dreamshops.entity;
+package com.dailycodework.dreamshops.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

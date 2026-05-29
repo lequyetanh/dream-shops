@@ -1,4 +1,4 @@
-﻿package com.dailycodework.dreamshops.entity;
+package com.dailycodework.dreamshops.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -17,7 +17,6 @@ public class TaskLog {
     @Column(name = "company_id", nullable = false)
     private Long companyId;
 
-    @NotBlank
     @Size(max = 100)
     @Column(nullable = false, length = 100)
     private String type;

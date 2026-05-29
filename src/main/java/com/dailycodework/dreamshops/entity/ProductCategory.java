@@ -1,4 +1,4 @@
-﻿package com.dailycodework.dreamshops.entity;
+package com.dailycodework.dreamshops.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

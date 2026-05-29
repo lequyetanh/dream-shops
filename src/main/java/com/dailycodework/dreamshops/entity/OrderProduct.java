@@ -1,4 +1,4 @@
-﻿package com.dailycodework.dreamshops.entity;
+package com.dailycodework.dreamshops.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -47,7 +47,7 @@ public class OrderProduct {
     @Column(name = "total_price", nullable = false, precision = 19, scale = 2)
     private BigDecimal totalPrice;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id", nullable = false, referencedColumnName = "id")
     @JsonBackReference
     private Order order;

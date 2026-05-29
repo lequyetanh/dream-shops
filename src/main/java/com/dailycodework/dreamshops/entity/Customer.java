@@ -1,4 +1,4 @@
-﻿package com.dailycodework.dreamshops.entity;
+package com.dailycodework.dreamshops.entity;
 
 import com.dailycodework.dreamshops.payload.dto.customer.CustomerInfo;
 import jakarta.persistence.*;
