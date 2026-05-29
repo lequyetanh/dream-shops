@@ -88,9 +88,27 @@ public class WarehouseTransactionService implements IWarehouseTransactionService
         );
     };
     @Override
-    public BaseResultDTO updateWarehouseTransaction(WarehouseTransactionReq warehouseTransactionReq){
-        return null;
-    };
+    public BaseResultDTO updateWarehouseTransaction(WarehouseTransactionReq warehouseTransactionReq) {
+        Optional<WarehouseTransaction> existing = warehouseTransactionRepository.findById(warehouseTransactionReq.getId());
+        if (existing.isEmpty()) {
+            return new BaseResultDTO(ResultNotify.notFound, false, null);
+        }
+        WarehouseTransaction warehouseTransaction = existing.get();
+        warehouseTransaction.getWarehouseTransactionDetail().clear();
+
+        BeanUtils.copyProperties(warehouseTransactionReq, warehouseTransaction, "id", "warehouseTransactionDetail");
+
+        List<WarehouseTransactionDetail> details = new ArrayList<>();
+        for (WarehouseTransactionDetailReq prod : warehouseTransactionReq.getDetails()) {
+            WarehouseTransactionDetail detail = new WarehouseTransactionDetail();
+            BeanUtils.copyProperties(prod, detail);
+            detail.setWarehouseTransaction(warehouseTransaction);
+            details.add(detail);
+        }
+        warehouseTransaction.getWarehouseTransactionDetail().addAll(details);
+        warehouseTransactionRepository.save(warehouseTransaction);
+        return new BaseResultDTO(ResultNotify.successUpdate, true, warehouseTransaction);
+    }
     @Override
     public BaseResultDTO deleteWarehouseTransaction(Long id){
         warehouseTransactionRepository.deleteById(id);
