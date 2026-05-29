@@ -63,4 +63,21 @@ public class Product {
         BaseResultDTO result = productService.deleteProduct(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    @PreAuthorize("hasAuthority('PRODUCT_VIEW')")
+    @GetMapping("/product/find-by-barcode/{barcode}")
+    public ResponseEntity<BaseResultDTO> findByBarcode(@PathVariable(value = "barcode") String barcode) {
+        BaseResultDTO result = productService.findByBarcode(barcode);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('PRODUCT_VIEW')")
+    @GetMapping("/product/low-stock")
+    public ResponseEntity<BaseResultDTO> getLowStockProducts(
+            @RequestParam Long companyId,
+            @RequestParam(defaultValue = "10") Integer threshold
+    ) {
+        BaseResultDTO result = productService.getLowStockProducts(companyId, threshold);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
