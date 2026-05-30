@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,28 +110,18 @@ public class ConfigService implements IConfigService {
         return c;
     }
 
-    private ConfigResponse convertConfigToConfigResponse(List<Config> config) {
+    // Pattern Strategy Map
+    private ConfigResponse convertConfigToConfigResponse(List<Config> configs) {
         ConfigResponse configResponse = new ConfigResponse();
-        for (Config configItem : config) {
-            if (configItem.getCode().equals(ConfigConstant.INVOICE_TYPE)) {
-                configResponse.setInvoiceType(Integer.valueOf(configItem.getValue()));
-            }
-            if (configItem.getCode().equals(ConfigConstant.TAXI_CONFIG)) {
-                configResponse.setTaxiConfig(Common.fromJsonString(configItem.getValue(), ConfigResponse.TaxiConfig.class));
-            }
-            if (configItem.getCode().equals(ConfigConstant.TYPE_DISCOUNT)) {
-                configResponse.setTypeDiscount(Integer.valueOf(configItem.getValue()));
-            }
-            if (configItem.getCode().equals(ConfigConstant.VOUCHER_APPLY)) {
-                configResponse.setVoucherApply(Integer.valueOf(configItem.getValue()));
-            }
-            if (configItem.getCode().equals(ConfigConstant.SEPARATOR)) {
-                configResponse.setSeparator(Common.fromJsonString(configItem.getValue(), ConfigResponse.Separator.class));
-            }
-            if (configItem.getCode().equals(ConfigConstant.CURRENCY_DENOMINATION_CONFIGURATION)) {
-                configResponse.setCurrencyDenominationConfiguration(Common.fromJsonString(configItem.getValue(), ConfigResponse.CurrencyDenominationConfiguration.class));
-            }
-        }
+        Map<String, Consumer<String>> handlers = Map.of(
+                ConfigConstant.INVOICE_TYPE, v -> configResponse.setInvoiceType(Integer.valueOf(v)),
+                ConfigConstant.TAXI_CONFIG, v -> configResponse.setTaxiConfig(Common.fromJsonString(v, ConfigResponse.TaxiConfig.class)),
+                ConfigConstant.TYPE_DISCOUNT, v -> configResponse.setTypeDiscount(Integer.valueOf(v)),
+                ConfigConstant.VOUCHER_APPLY, v -> configResponse.setVoucherApply(Integer.valueOf(v)),
+                ConfigConstant.SEPARATOR, v -> configResponse.setSeparator(Common.fromJsonString(v, ConfigResponse.Separator.class)),
+                ConfigConstant.CURRENCY_DENOMINATION_CONFIGURATION, v -> configResponse.setCurrencyDenominationConfiguration(Common.fromJsonString(v, ConfigResponse.CurrencyDenominationConfiguration.class))
+        );
+        configs.forEach(c -> Optional.ofNullable(handlers.get(c.getCode())).ifPresent(h -> h.accept(c.getValue())));
         return configResponse;
     }
 }
