@@ -9,10 +9,11 @@ import com.dailycodework.dreamshops.repository.config.IConfigRepository;
 import com.dailycodework.dreamshops.util.Common;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ConfigService implements IConfigService {
@@ -74,52 +75,37 @@ public class ConfigService implements IConfigService {
     }
 
     private List<Config> convertConfigResponseToConfig(ConfigResponse configResponse) {
-        List<Config> configs = new ArrayList<>();
+        List<String> codes = Arrays.asList(
+                ConfigConstant.INVOICE_TYPE,
+                ConfigConstant.TAXI_CONFIG,
+                ConfigConstant.TYPE_DISCOUNT,
+                ConfigConstant.VOUCHER_APPLY,
+                ConfigConstant.SEPARATOR,
+                ConfigConstant.CURRENCY_DENOMINATION_CONFIGURATION
+        );
+        return codes.stream()
+                .map(code -> buildConfigFromCode(configResponse, code))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
 
-        if (configResponse.getInvoiceType() != null) {
-            Config c = new Config();
-            c.setCompanyId(configResponse.getCompanyId());
-            c.setCode(ConfigConstant.INVOICE_TYPE);
-            c.setValue(String.valueOf(configResponse.getInvoiceType()));
-            configs.add(c);
-        }
-        if (configResponse.getTaxiConfig() != null) {
-            Config c = new Config();
-            c.setCompanyId(configResponse.getCompanyId());
-            c.setCode(ConfigConstant.TAXI_CONFIG);
-            c.setValue(Common.toJsonString(configResponse.getTaxiConfig()));
-            configs.add(c);
-        }
-        if (configResponse.getTypeDiscount() != null) {
-            Config c = new Config();
-            c.setCompanyId(configResponse.getCompanyId());
-            c.setCode(ConfigConstant.TYPE_DISCOUNT);
-            c.setValue(String.valueOf(configResponse.getTypeDiscount()));
-            configs.add(c);
-        }
-        if (configResponse.getVoucherApply() != null) {
-            Config c = new Config();
-            c.setCompanyId(configResponse.getCompanyId());
-            c.setCode(ConfigConstant.VOUCHER_APPLY);
-            c.setValue(String.valueOf(configResponse.getVoucherApply()));
-            configs.add(c);
-        }
-        if (configResponse.getSeparator() != null) {
-            Config c = new Config();
-            c.setCompanyId(configResponse.getCompanyId());
-            c.setCode(ConfigConstant.SEPARATOR);
-            c.setValue(Common.toJsonString(configResponse.getSeparator()));
-            configs.add(c);
-        }
-        if (configResponse.getCurrencyDenominationConfiguration() != null) {
-            Config c = new Config();
-            c.setCompanyId(configResponse.getCompanyId());
-            c.setCode(ConfigConstant.CURRENCY_DENOMINATION_CONFIGURATION);
-            c.setValue(Common.toJsonString(configResponse.getCurrencyDenominationConfiguration()));
-            configs.add(c);
-        }
+    private Config buildConfigFromCode(ConfigResponse configResponse, String code) {
+        Object value = switch (code) {
+            case ConfigConstant.INVOICE_TYPE -> configResponse.getInvoiceType();
+            case ConfigConstant.TAXI_CONFIG -> configResponse.getTaxiConfig();
+            case ConfigConstant.TYPE_DISCOUNT -> configResponse.getTypeDiscount();
+            case ConfigConstant.VOUCHER_APPLY -> configResponse.getVoucherApply();
+            case ConfigConstant.SEPARATOR -> configResponse.getSeparator();
+            case ConfigConstant.CURRENCY_DENOMINATION_CONFIGURATION -> configResponse.getCurrencyDenominationConfiguration();
+            default -> null;
+        };
+        if (value == null) return null;
 
-        return configs;
+        Config c = new Config();
+        c.setCompanyId(configResponse.getCompanyId());
+        c.setCode(code);
+        c.setValue(value instanceof Number ? String.valueOf(value) : Common.toJsonString(value));
+        return c;
     }
 
     private ConfigResponse convertConfigToConfigResponse(List<Config> config) {
