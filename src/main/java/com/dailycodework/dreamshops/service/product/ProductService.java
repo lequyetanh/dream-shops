@@ -11,6 +11,7 @@ import com.dailycodework.dreamshops.payload.dto.product.ProductResponse;
 import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
 import com.dailycodework.dreamshops.repository.product.IProductRepository;
 import com.dailycodework.dreamshops.service.RedisManagementService;
+import com.dailycodework.dreamshops.util.Common;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService {
+    private static final String PRODUCT_CACHE = "product:";
+
     public final IProductRepository productRepository;
     public final RedisManagementService redisManagementService;
     public final ICategoryRepository categoryRepository;
@@ -43,10 +46,17 @@ public class ProductService implements IProductService {
 
     @Override
     public BaseResultDTO findById(Long id) {
+        String cacheKey = PRODUCT_CACHE + id;
+        Object cached = redisManagementService.getValue(cacheKey);
+        if (cached != null) {
+            Product product = Common.fromJsonString(cached.toString(), Product.class);
+            return new BaseResultDTO(ResultNotify.successGet, true, product);
+        }
         Optional<Product> product = productRepository.findById(id);
         if (product.isEmpty()) {
             throw new RuntimeException("Không tìm thấy sản phẩm");
         }
+        redisManagementService.setValue(cacheKey, Common.toJsonString(product.get()));
         return new BaseResultDTO(ResultNotify.successGet, true, product.get());
     }
 
@@ -87,12 +97,14 @@ public class ProductService implements IProductService {
         List<Category> categories = categoryRepository.findAllById(productReq.getCategoryIds());
         product.getCategories().addAll(categories);
         productRepository.save(product);
+        redisManagementService.deleteKey(PRODUCT_CACHE + productReq.getId());
         return new BaseResultDTO(ResultNotify.successUpdate, true, product);
     }
 
     @Override
     public BaseResultDTO deleteProduct(Long id) {
         productRepository.deleteById(id);
+        redisManagementService.deleteKey(PRODUCT_CACHE + id);
         return new BaseResultDTO(ResultNotify.successDelete, true, null);
     }
 
@@ -109,6 +121,7 @@ public class ProductService implements IProductService {
                 productRepository.findById(productId).ifPresent(product -> {
                     product.setStockQuantity(product.getStockQuantity() - totalQty.intValue());
                     productRepository.save(product);
+                    redisManagementService.deleteKey(PRODUCT_CACHE + productId);
                 })
         );
     }

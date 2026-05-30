@@ -6,6 +6,7 @@ import com.dailycodework.dreamshops.entity.Config;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.config.ConfigResponse;
 import com.dailycodework.dreamshops.repository.config.IConfigRepository;
+import com.dailycodework.dreamshops.service.RedisManagementService;
 import com.dailycodework.dreamshops.util.Common;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +21,24 @@ import java.util.stream.Collectors;
 @Service
 public class ConfigService implements IConfigService {
 
-    private final IConfigRepository configRepository;
+    private static final String CONFIG_CACHE = "config:";
 
-    public ConfigService(IConfigRepository configRepository) {
+    private final IConfigRepository configRepository;
+    private final RedisManagementService redisManagementService;
+
+    public ConfigService(IConfigRepository configRepository, RedisManagementService redisManagementService) {
         this.configRepository = configRepository;
+        this.redisManagementService = redisManagementService;
     }
 
     @Override
     public BaseResultDTO getByCompanyId(Long companyId) {
+        String cacheKey = CONFIG_CACHE + companyId;
+        Object cached = redisManagementService.getValue(cacheKey);
+        if (cached != null) {
+            ConfigResponse response = Common.fromJsonString(cached.toString(), ConfigResponse.class);
+            return new BaseResultDTO(ResultNotify.successGet, true, response);
+        }
         List<String> codes = Arrays.asList(
                 ConfigConstant.INVOICE_TYPE,
                 ConfigConstant.TAXI_CONFIG,
@@ -39,6 +50,7 @@ public class ConfigService implements IConfigService {
         List<Config> configs = configRepository.findAllByCompanyIdAndCodes(companyId, codes);
         ConfigResponse response = convertConfigToConfigResponse(configs);
         response.setCompanyId(companyId);
+        redisManagementService.setValue(cacheKey, Common.toJsonString(response));
         return new BaseResultDTO(ResultNotify.successGet, true, response);
     }
 
@@ -55,6 +67,7 @@ public class ConfigService implements IConfigService {
                 configRepository.save(config);
             }
         }
+        redisManagementService.deleteKey(CONFIG_CACHE + configResponse.getCompanyId());
         return new BaseResultDTO(ResultNotify.successUpdate, true, null);
     }
 
