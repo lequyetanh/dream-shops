@@ -6,6 +6,7 @@ import com.dailycodework.dreamshops.payload.dto.taskLog.Content;
 import com.dailycodework.dreamshops.repository.order.IOrderRepository;
 import com.dailycodework.dreamshops.repository.taskLog.ITaskLogRepository;
 import com.dailycodework.dreamshops.service.order.OrderService;
+import com.dailycodework.dreamshops.service.product.IProductService;
 import com.dailycodework.dreamshops.service.taskLog.TaskLogService;
 import com.dailycodework.dreamshops.service.warehouseTransaction.WarehouseTransactionService;
 import com.dailycodework.dreamshops.util.Common;
@@ -35,6 +36,7 @@ public class OrderConsumer {
     private final ITaskLogRepository taskLogRepository;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
     private final WarehouseTransactionService warehouseTransactionService;
+    private final IProductService productService;
 
     @RabbitListener(queues = "create-order-queue")
     public void handle(Message message, Integer taskLogId, Channel channel) throws InterruptedException, IOException, ExecutionException {
@@ -52,6 +54,7 @@ public class OrderConsumer {
             List<Order> listOrder = orderRepository.findByIdIn(content.getBillIds());
             System.out.println(listOrder);
             warehouseTransactionService.createWarehouseTransactionFromListOrder(listOrder);
+            productService.updateStockQuantity(listOrder);
 //            ==========================================================
         }catch(Exception e){
             log.error(

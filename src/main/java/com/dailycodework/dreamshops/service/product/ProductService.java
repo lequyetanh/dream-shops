@@ -2,6 +2,8 @@ package com.dailycodework.dreamshops.service.product;
 
 import com.dailycodework.dreamshops.constant.ResultNotify;
 import com.dailycodework.dreamshops.entity.Category;
+import com.dailycodework.dreamshops.entity.Order;
+import com.dailycodework.dreamshops.entity.OrderProduct;
 import com.dailycodework.dreamshops.entity.Product;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.product.ProductInfo;
@@ -15,8 +17,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -89,5 +94,22 @@ public class ProductService implements IProductService {
     public BaseResultDTO deleteProduct(Long id) {
         productRepository.deleteById(id);
         return new BaseResultDTO(ResultNotify.successDelete, true, null);
+    }
+
+    @Override
+    public void updateStockQuantity(List<Order> orders) {
+        Map<Long, BigDecimal> totalQtyByProductId = orders.stream()
+                .flatMap(o -> o.getProducts().stream())
+                .collect(Collectors.groupingBy(
+                        OrderProduct::getProductId,
+                        Collectors.reducing(BigDecimal.ZERO, OrderProduct::getQuantity, BigDecimal::add)
+                ));
+
+        totalQtyByProductId.forEach((productId, totalQty) ->
+                productRepository.findById(productId).ifPresent(product -> {
+                    product.setStockQuantity(product.getStockQuantity() - totalQty.intValue());
+                    productRepository.save(product);
+                })
+        );
     }
 }
