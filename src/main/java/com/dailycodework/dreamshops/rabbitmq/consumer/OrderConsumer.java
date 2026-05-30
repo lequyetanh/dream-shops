@@ -2,6 +2,9 @@ package com.dailycodework.dreamshops.rabbitmq.consumer;
 
 import com.dailycodework.dreamshops.entity.Order;
 import com.dailycodework.dreamshops.entity.TaskLog;
+import com.dailycodework.dreamshops.rabbitmq.handler.OrderHandler;
+import com.dailycodework.dreamshops.rabbitmq.handler.StockUpdateHandler;
+import com.dailycodework.dreamshops.rabbitmq.handler.WarehouseTransactionHandler;
 import com.dailycodework.dreamshops.payload.dto.taskLog.Content;
 import com.dailycodework.dreamshops.repository.order.IOrderRepository;
 import com.dailycodework.dreamshops.repository.taskLog.ITaskLogRepository;
@@ -53,8 +56,14 @@ public class OrderConsumer {
             Order order = new Order();
             List<Order> listOrder = orderRepository.findByIdIn(content.getBillIds());
             System.out.println(listOrder);
+
+            // Xử lý thông thường
             warehouseTransactionService.createWarehouseTransactionFromListOrder(listOrder);
             productService.updateStockQuantity(listOrder);
+
+            // Chain of Responsibility
+//            OrderHandler chain = buildOrderHandlerChain();
+//            chain.handle(listOrder);
 //            ==========================================================
         }catch(Exception e){
             log.error(
@@ -66,6 +75,12 @@ public class OrderConsumer {
         finally {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         }
+    }
+
+    private OrderHandler buildOrderHandlerChain() {
+        OrderHandler warehouseHandler = new WarehouseTransactionHandler(warehouseTransactionService);
+        warehouseHandler.setNext(new StockUpdateHandler(productService));
+        return warehouseHandler;
     }
 
     public CompletableFuture<TaskLog> getTaskLogById(Integer id) throws IOException {
