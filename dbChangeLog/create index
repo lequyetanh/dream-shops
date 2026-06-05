@@ -1,0 +1,181 @@
+-- ============================================================
+-- INDEX SCRIPT - SQL Server
+-- Dream Shops POS System
+-- Lý do đánh index: multi-tenant (company_id filter mọi query),
+-- tìm kiếm theo keyword, join bảng con, date range report
+-- ============================================================
+
+
+-- ============================================================
+-- TABLE: orders
+-- Query patterns:
+--   - WHERE company_id = ? (mọi query)
+--   - WHERE company_id = ? AND status = ?
+--   - WHERE company_id = ? AND order_date BETWEEN ? AND ?
+--   - WHERE company_id = ? AND customer_id = ?
+--   - WHERE code LIKE ?
+-- ============================================================
+
+-- Mọi query list order đều filter company_id trước
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_orders_company_id' AND object_id = OBJECT_ID('orders'))
+    CREATE INDEX idx_orders_company_id ON orders(company_id);
+
+-- Filter theo trạng thái đơn hàng trong cùng công ty
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_orders_company_status' AND object_id = OBJECT_ID('orders'))
+    CREATE INDEX idx_orders_company_status ON orders(company_id, status);
+
+-- Report theo khoảng thời gian: thường ORDER BY order_date DESC
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_orders_company_date' AND object_id = OBJECT_ID('orders'))
+    CREATE INDEX idx_orders_company_date ON orders(company_id, order_date DESC);
+
+-- JOIN hoặc filter theo khách hàng
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_orders_customer_id' AND object_id = OBJECT_ID('orders'))
+    CREATE INDEX idx_orders_customer_id ON orders(customer_id);
+
+-- Tìm kiếm theo mã đơn hàng
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_orders_code' AND object_id = OBJECT_ID('orders'))
+    CREATE INDEX idx_orders_code ON orders(code);
+
+
+-- ============================================================
+-- TABLE: order_product
+-- Query patterns:
+--   - JOIN orders ON order_product.order_id = orders.id  (EAGER fetch)
+--   - WHERE product_id = ? (updateStockQuantity, báo cáo)
+-- ============================================================
+
+-- FK join lên orders - SQL Server không tự tạo index cho FK
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_order_product_order_id' AND object_id = OBJECT_ID('order_product'))
+    CREATE INDEX idx_order_product_order_id ON order_product(order_id);
+
+-- Truy vấn sản phẩm đã bán theo product_id
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_order_product_product_id' AND object_id = OBJECT_ID('order_product'))
+    CREATE INDEX idx_order_product_product_id ON order_product(product_id);
+
+
+-- ============================================================
+-- TABLE: product
+-- Query patterns:
+--   - WHERE company_id = ? (mọi query)
+--   - WHERE barcode = ? (findByBarcode - tra cứu nhanh khi quét)
+--   - WHERE company_id = ? AND stock_quantity <= ? (getLowStockProducts)
+--   - WHERE company_id = ? AND name LIKE ? (tìm kiếm)
+-- ============================================================
+
+-- Multi-tenant filter cơ bản
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_product_company_id' AND object_id = OBJECT_ID('product'))
+    CREATE INDEX idx_product_company_id ON product(company_id);
+
+-- Tra cứu barcode tại quầy thu ngân - cần nhanh nhất có thể
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_product_barcode' AND object_id = OBJECT_ID('product'))
+    CREATE UNIQUE INDEX idx_product_barcode ON product(company_id, barcode) WHERE barcode IS NOT NULL;
+
+-- Cảnh báo tồn kho thấp
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_product_company_stock' AND object_id = OBJECT_ID('product'))
+    CREATE INDEX idx_product_company_stock ON product(company_id, stock_quantity);
+
+
+-- ============================================================
+-- TABLE: customer
+-- Query patterns:
+--   - WHERE company_id = ? (mọi query)
+--   - WHERE company_id = ? AND (name LIKE ? OR code LIKE ? OR phone LIKE ?)
+-- ============================================================
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_customer_company_id' AND object_id = OBJECT_ID('customer'))
+    CREATE INDEX idx_customer_company_id ON customer(company_id);
+
+-- Tìm nhanh khách hàng theo mã nội bộ
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_customer_company_code' AND object_id = OBJECT_ID('customer'))
+    CREATE INDEX idx_customer_company_code ON customer(company_id, code);
+
+-- Tra cứu số điện thoại khi tạo đơn
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_customer_phone' AND object_id = OBJECT_ID('customer'))
+    CREATE INDEX idx_customer_phone ON customer(phone);
+
+
+-- ============================================================
+-- TABLE: warehouse_transaction
+-- Query patterns:
+--   - WHERE company_id = ?
+--   - WHERE company_id = ? AND date BETWEEN ? AND ?
+-- ============================================================
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_wt_company_id' AND object_id = OBJECT_ID('warehouse_transaction'))
+    CREATE INDEX idx_wt_company_id ON warehouse_transaction(company_id);
+
+-- Report nhập/xuất kho theo kỳ
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_wt_company_date' AND object_id = OBJECT_ID('warehouse_transaction'))
+    CREATE INDEX idx_wt_company_date ON warehouse_transaction(company_id, date DESC);
+
+
+-- ============================================================
+-- TABLE: warehouse_transaction_detail
+-- Query patterns:
+--   - JOIN warehouse_transaction (EAGER fetch)
+--   - WHERE product_id = ? (báo cáo xuất nhập theo sản phẩm)
+-- ============================================================
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_wtd_transaction_id' AND object_id = OBJECT_ID('warehouse_transaction_detail'))
+    CREATE INDEX idx_wtd_transaction_id ON warehouse_transaction_detail(warehouse_transaction_id);
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_wtd_product_id' AND object_id = OBJECT_ID('warehouse_transaction_detail'))
+    CREATE INDEX idx_wtd_product_id ON warehouse_transaction_detail(product_id);
+
+
+-- ============================================================
+-- TABLE: config
+-- Query patterns:
+--   - WHERE company_id = ? AND code IN (...)   (getByCompanyId)
+--   - WHERE company_id = ? AND code = ?        (findByCompanyIdAndCode)
+-- Composite unique: mỗi công ty chỉ có 1 giá trị cho mỗi code
+-- ============================================================
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_config_company_code' AND object_id = OBJECT_ID('config'))
+    CREATE UNIQUE INDEX idx_config_company_code ON config(company_id, code);
+
+
+-- ============================================================
+-- TABLE: category
+-- Query patterns:
+--   - WHERE company_id = ? AND name LIKE ?
+-- ============================================================
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_category_company_id' AND object_id = OBJECT_ID('category'))
+    CREATE INDEX idx_category_company_id ON category(company_id);
+
+
+-- ============================================================
+-- TABLE: product_category (join table)
+-- Query patterns:
+--   - WHERE product_id = ?  (load categories của product)
+--   - WHERE category_id = ? (load products của category)
+-- ============================================================
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_product_category_product' AND object_id = OBJECT_ID('product_category'))
+    CREATE INDEX idx_product_category_product ON product_category(product_id);
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_product_category_category' AND object_id = OBJECT_ID('product_category'))
+    CREATE INDEX idx_product_category_category ON product_category(category_id);
+
+
+-- ============================================================
+-- TABLE: app_user
+-- Query patterns:
+--   - WHERE username = ?    (authentication - mỗi request JWT)
+--   - WHERE company_id = ?  (list user theo công ty)
+--   - WHERE company_id = ? AND active = 1
+-- Note: username đã UNIQUE constraint nhưng SQL Server
+--       tạo unique constraint = tạo unique index ngầm,
+--       để rõ ràng vẫn kiểm tra và tạo tường minh nếu chưa có
+-- ============================================================
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_app_user_username' AND object_id = OBJECT_ID('app_user'))
+    CREATE UNIQUE INDEX idx_app_user_username ON app_user(username);
+
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_app_user_company_id' AND object_id = OBJECT_ID('app_user'))
+    CREATE INDEX idx_app_user_company_id ON app_user(company_id);
+
+-- Lọc user đang hoạt động theo công ty
+IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_app_user_company_active' AND object_id = OBJECT_ID('app_user'))
+    CREATE INDEX idx_app_user_company_active ON app_user(company_id, active);
