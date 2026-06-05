@@ -12,6 +12,7 @@ import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
 import com.dailycodework.dreamshops.repository.product.IProductRepository;
 import com.dailycodework.dreamshops.service.RedisManagementService;
 import com.dailycodework.dreamshops.util.Common;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProductService implements IProductService {
     private static final String PRODUCT_CACHE = "product:";
 

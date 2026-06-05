@@ -8,6 +8,7 @@ import com.dailycodework.dreamshops.payload.dto.config.ConfigResponse;
 import com.dailycodework.dreamshops.repository.config.IConfigRepository;
 import com.dailycodework.dreamshops.service.RedisManagementService;
 import com.dailycodework.dreamshops.util.Common;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ConfigService implements IConfigService {
 
     private static final String CONFIG_CACHE = "config:";

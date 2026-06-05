@@ -8,6 +8,7 @@ import com.dailycodework.dreamshops.payload.dto.auth.LoginRequest;
 import com.dailycodework.dreamshops.payload.dto.auth.RegisterRequest;
 import com.dailycodework.dreamshops.repository.user.IAppUserRepository;
 import com.dailycodework.dreamshops.security.JwtService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,6 +20,7 @@ import java.time.ZonedDateTime;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthService {
     private final IAppUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

@@ -6,6 +6,7 @@ import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.user.PasswordChangeReq;
 import com.dailycodework.dreamshops.payload.dto.user.UserInfo;
 import com.dailycodework.dreamshops.repository.user.IAppUserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService implements IUserService {
     private final IAppUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

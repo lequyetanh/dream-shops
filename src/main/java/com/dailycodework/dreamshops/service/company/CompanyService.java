@@ -10,6 +10,7 @@ import com.dailycodework.dreamshops.entity.Company;
 import com.dailycodework.dreamshops.repository.company.ICompanyRepository;
 import com.dailycodework.dreamshops.repository.config.IConfigRepository;
 import com.dailycodework.dreamshops.service.RedisManagementService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CompanyService implements ICompanyService {
     private final ICompanyRepository companyRepository;
     private final IConfigRepository configRepository;

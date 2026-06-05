@@ -5,6 +5,7 @@ import com.dailycodework.dreamshops.entity.Category;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.category.CategoryInfo;
 import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CategoryService implements ICategoryService {
     private final ICategoryRepository categoryRepository;
 

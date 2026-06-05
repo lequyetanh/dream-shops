@@ -8,6 +8,7 @@ import com.dailycodework.dreamshops.payload.dto.customer.CustomerInfo;
 import com.dailycodework.dreamshops.payload.dto.customer.CustomerSpendingDTO;
 import com.dailycodework.dreamshops.repository.customer.ICustomerRepository;
 import com.dailycodework.dreamshops.repository.order.IOrderRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CustomerService implements ICustomerService {
     private final ICustomerRepository customerRepository;
     private final IOrderRepository orderRepository;

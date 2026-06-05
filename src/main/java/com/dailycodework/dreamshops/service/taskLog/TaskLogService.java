@@ -5,12 +5,14 @@ import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.entity.TaskLog;
 import com.dailycodework.dreamshops.rabbitmq.producer.OrderProducer;
 import com.dailycodework.dreamshops.repository.taskLog.ITaskLogRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TaskLogService implements ITaskLogService{
     private final ITaskLogRepository taskLogRepository;
     private final OrderProducer orderProducer;

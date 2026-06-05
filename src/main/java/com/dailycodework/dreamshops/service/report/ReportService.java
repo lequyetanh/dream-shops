@@ -4,6 +4,7 @@ import com.dailycodework.dreamshops.constant.ResultNotify;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.report.RevenueComparisonDTO;
 import com.dailycodework.dreamshops.repository.report.ReportRepositoryCustom;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReportService implements IReportService {
     private final ReportRepositoryCustom reportRepository;
 
