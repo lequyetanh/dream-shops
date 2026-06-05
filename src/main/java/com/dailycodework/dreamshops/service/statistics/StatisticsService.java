@@ -7,6 +7,7 @@ import com.dailycodework.dreamshops.payload.dto.statistics.OrderStatusCountDTO;
 import com.dailycodework.dreamshops.payload.dto.statistics.RevenueStatDTO;
 import com.dailycodework.dreamshops.payload.dto.statistics.TopProductDTO;
 import com.dailycodework.dreamshops.repository.statistics.StatisticsRepositoryCustom;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.Executors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class StatisticsService implements IStatisticsService {
 
     private final StatisticsRepositoryCustom statisticsRepository;

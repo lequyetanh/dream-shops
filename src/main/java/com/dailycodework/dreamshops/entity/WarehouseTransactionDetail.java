@@ -30,7 +30,7 @@ public class WarehouseTransactionDetail {
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "warehouse_transaction_id", nullable = false, referencedColumnName = "id")
     @JsonBackReference
     private WarehouseTransaction warehouseTransaction;

@@ -1,6 +1,7 @@
 package com.dailycodework.dreamshops.service.sequence;
 
 import com.dailycodework.dreamshops.service.RedisManagementService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class SequenceService {
     private final String ENTITY_NAME = "sds.ep.BaseSequenceService";
     private final Logger log = LoggerFactory.getLogger(ENTITY_NAME);

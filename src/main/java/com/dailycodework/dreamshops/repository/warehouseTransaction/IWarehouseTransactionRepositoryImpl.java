@@ -74,6 +74,25 @@ public class IWarehouseTransactionRepositoryImpl implements WarehouseTransaction
                 " ORDER BY wt.id DESC",
                 Tuple.class
         );
+
+
+        //        List<Tuple> tuples = query.getResultList();
+//        warehouseTransactionLists = tuples.stream().map(tuple -> {
+//            WarehouseTransactionList warehouseTransactionList = new WarehouseTransactionList();
+//            warehouseTransactionList.setId(tuple.get("id", Long.class));
+//            warehouseTransactionList.setCompanyId(tuple.get("companyId", Long.class));
+//            warehouseTransactionList.setNo(tuple.get("no", String.class));
+//            warehouseTransactionList.setDate(tuple.get("date", ZonedDateTime.class));
+//            warehouseTransactionList.setDescription(tuple.get("description", String.class));
+//            warehouseTransactionList.setAmount(tuple.get("amount", BigDecimal.class));
+//            warehouseTransactionList.setVatRate(tuple.get("vatRate", Integer.class));
+//            warehouseTransactionList.setVatAmount(tuple.get("vatAmount", BigDecimal.class));
+//            warehouseTransactionList.setTotalAmount(tuple.get("totalAmount", BigDecimal.class));
+//            return warehouseTransactionList;
+//        }).collect(Collectors.toList());
+//        return new PageImpl<>(warehouseTransactionLists, pageable, totalItem);
+
+
         Common.setParamsWithPageable(query, params, pageable, totalItem);
 
         List<WarehouseTransactionList> results = TupleMapper.mapList(query, WarehouseTransactionList.class);

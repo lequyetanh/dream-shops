@@ -2,10 +2,14 @@ package com.dailycodework.dreamshops.rabbitmq.consumer;
 
 import com.dailycodework.dreamshops.entity.Order;
 import com.dailycodework.dreamshops.entity.TaskLog;
+import com.dailycodework.dreamshops.rabbitmq.handler.OrderHandler;
+import com.dailycodework.dreamshops.rabbitmq.handler.StockUpdateHandler;
+import com.dailycodework.dreamshops.rabbitmq.handler.WarehouseTransactionHandler;
 import com.dailycodework.dreamshops.payload.dto.taskLog.Content;
 import com.dailycodework.dreamshops.repository.order.IOrderRepository;
 import com.dailycodework.dreamshops.repository.taskLog.ITaskLogRepository;
 import com.dailycodework.dreamshops.service.order.OrderService;
+import com.dailycodework.dreamshops.service.product.IProductService;
 import com.dailycodework.dreamshops.service.taskLog.TaskLogService;
 import com.dailycodework.dreamshops.service.warehouseTransaction.WarehouseTransactionService;
 import com.dailycodework.dreamshops.util.Common;
@@ -35,6 +39,7 @@ public class OrderConsumer {
     private final ITaskLogRepository taskLogRepository;
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(10);
     private final WarehouseTransactionService warehouseTransactionService;
+    private final IProductService productService;
 
     @RabbitListener(queues = "create-order-queue")
     public void handle(Message message, Integer taskLogId, Channel channel) throws InterruptedException, IOException, ExecutionException {
@@ -51,7 +56,14 @@ public class OrderConsumer {
             Order order = new Order();
             List<Order> listOrder = orderRepository.findByIdIn(content.getBillIds());
             System.out.println(listOrder);
+
+            // Xử lý thông thường
             warehouseTransactionService.createWarehouseTransactionFromListOrder(listOrder);
+            productService.updateStockQuantity(listOrder);
+
+            // Chain of Responsibility
+//            OrderHandler chain = buildOrderHandlerChain();
+//            chain.handle(listOrder);
 //            ==========================================================
         }catch(Exception e){
             log.error(
@@ -63,6 +75,12 @@ public class OrderConsumer {
         finally {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         }
+    }
+
+    private OrderHandler buildOrderHandlerChain() {
+        OrderHandler warehouseHandler = new WarehouseTransactionHandler(warehouseTransactionService);
+        warehouseHandler.setNext(new StockUpdateHandler(productService));
+        return warehouseHandler;
     }
 
     public CompletableFuture<TaskLog> getTaskLogById(Integer id) throws IOException {

@@ -119,7 +119,7 @@ public class WarehouseTransactionService implements IWarehouseTransactionService
         );
     };
 
-    public BaseResultDTO createWarehouseTransactionFromListOrder(List<Order> orders){
+    public void createWarehouseTransactionFromListOrder(List<Order> orders){
         for(Order order: orders){
             WarehouseTransaction warehouseTransaction = new WarehouseTransaction();
             warehouseTransaction.setCompanyId(order.getCompanyId());
@@ -137,6 +137,5 @@ public class WarehouseTransactionService implements IWarehouseTransactionService
             warehouseTransaction.setWarehouseTransactionDetail(productList);
             warehouseTransactionRepository.save(warehouseTransaction);
         }
-        return null;
     }
 }
