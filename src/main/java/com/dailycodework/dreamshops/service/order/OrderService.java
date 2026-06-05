@@ -13,12 +13,12 @@ import com.dailycodework.dreamshops.repository.order.IOrderRepository;
 import com.dailycodework.dreamshops.repository.product.IProductRepository;
 import com.dailycodework.dreamshops.service.taskLog.TaskLogService;
 import com.dailycodework.dreamshops.util.Common;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +35,7 @@ public class OrderService implements IOrderService {
     private final OrderWebSocketService orderWebSocketService;
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResultDTO getOrderWithPaging(
             Pageable pageable,
             String keyword,
@@ -56,6 +57,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResultDTO findById(Long id){
         Optional<Order> order = orderRepository.findById(id);
         return order.map(value -> new BaseResultDTO(ResultNotify.successGet, true, value))

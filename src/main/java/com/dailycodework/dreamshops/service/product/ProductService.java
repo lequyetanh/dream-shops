@@ -12,12 +12,12 @@ import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
 import com.dailycodework.dreamshops.repository.product.IProductRepository;
 import com.dailycodework.dreamshops.service.RedisManagementService;
 import com.dailycodework.dreamshops.util.Common;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,6 +36,7 @@ public class ProductService implements IProductService {
     public final ICategoryRepository categoryRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResultDTO getProductWithPaging(Pageable pageable, String sort, Integer companyId, String keyword) {
         Page<ProductResponse> productList = productRepository.getWithPaging(pageable, sort, companyId, keyword);
         return new BaseResultDTO(
@@ -47,6 +48,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResultDTO findById(Long id) {
         String cacheKey = PRODUCT_CACHE + id;
         Object cached = redisManagementService.getValue(cacheKey);
@@ -63,6 +65,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResultDTO findByBarcode(String barcode) {
         Optional<Product> product = productRepository.findByBarcode(barcode);
         if (product.isEmpty()) {
@@ -72,6 +75,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResultDTO getLowStockProducts(Long companyId, Integer threshold) {
         List<Product> products = productRepository.findByCompanyIdAndStockQuantityLessThanEqual(companyId, threshold);
         return new BaseResultDTO(ResultNotify.successGet, true, products, products.size());

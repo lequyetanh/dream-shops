@@ -5,11 +5,11 @@ import com.dailycodework.dreamshops.entity.Category;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.category.CategoryInfo;
 import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -20,12 +20,14 @@ public class CategoryService implements ICategoryService {
     private final ICategoryRepository categoryRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResultDTO getCategoryWithPaging(Pageable pageable, Long companyId, String keyword) {
         Page<Category> page = categoryRepository.findWithPaging(companyId, keyword, pageable);
         return new BaseResultDTO(ResultNotify.successGet, true, page.getContent(), (int) page.getTotalElements());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BaseResultDTO findById(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
         if (category.isEmpty()) {
