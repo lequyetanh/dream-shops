@@ -4,7 +4,9 @@ import com.dailycodework.dreamshops.entity.Order;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.product.ProductInfo;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IProductService {
@@ -15,5 +17,6 @@ public interface IProductService {
     BaseResultDTO getLowStockProducts(Long companyId, Integer threshold);
     BaseResultDTO createProduct(ProductInfo productReq);
     BaseResultDTO updateProduct(ProductInfo productReq);
+    BaseResultDTO uploadProductImage(Long id, MultipartFile file) throws IOException;
     BaseResultDTO deleteProduct(Long id);
 }

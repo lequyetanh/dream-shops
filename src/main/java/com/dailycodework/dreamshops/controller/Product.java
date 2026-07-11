@@ -8,10 +8,13 @@ import com.dailycodework.dreamshops.service.product.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 
 @RestController
@@ -57,6 +60,17 @@ public class Product {
     @PostMapping("/product/update")
     public ResponseEntity<BaseResultDTO> updateProduct(@RequestBody ProductInfo productReq){
         BaseResultDTO result = productService.updateProduct(productReq);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // Thêm/cập nhật ảnh sản phẩm
+    @PreAuthorize("hasAuthority('PRODUCT_UPDATE')")
+    @PostMapping(value = "/product/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResultDTO> uploadProductImage(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+        BaseResultDTO result = productService.uploadProductImage(id, file);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

@@ -6,8 +6,12 @@ import com.dailycodework.dreamshops.payload.dto.user.UserInfo;
 import com.dailycodework.dreamshops.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
@@ -33,6 +37,15 @@ public class AppUserController {
     @PostMapping("/user/update")
     public ResponseEntity<BaseResultDTO> updateUser(@RequestBody UserInfo userInfo) {
         return new ResponseEntity<>(userService.updateUser(userInfo), HttpStatus.OK);
+    }
+
+    // Thêm/cập nhật ảnh đại diện người dùng
+    @PostMapping(value = "/user/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResultDTO> uploadAvatar(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+        return new ResponseEntity<>(userService.uploadAvatar(id, file), HttpStatus.OK);
     }
 
     @DeleteMapping("/user/delete/{id}")

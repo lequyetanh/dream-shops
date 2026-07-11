@@ -12,4 +12,5 @@ public class UserInfo {
     private Long companyId;
     private String role;
     private Boolean active;
+    private String avatar;
 }

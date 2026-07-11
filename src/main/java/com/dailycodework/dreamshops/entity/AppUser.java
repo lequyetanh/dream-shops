@@ -62,6 +62,10 @@ public class AppUser implements UserDetails {
     @Column(name = "created_at")
     private ZonedDateTime createdAt;
 
+    @Size(max = 500)
+    @Column(length = 500)
+    private String avatar;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();

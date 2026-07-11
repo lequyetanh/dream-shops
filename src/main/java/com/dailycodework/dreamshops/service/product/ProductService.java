@@ -11,6 +11,7 @@ import com.dailycodework.dreamshops.payload.dto.product.ProductResponse;
 import com.dailycodework.dreamshops.repository.category.ICategoryRepository;
 import com.dailycodework.dreamshops.repository.product.IProductRepository;
 import com.dailycodework.dreamshops.service.RedisManagementService;
+import com.dailycodework.dreamshops.service.storage.FileStorageService;
 import com.dailycodework.dreamshops.util.Common;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,7 @@ public class ProductService implements IProductService {
     public final IProductRepository productRepository;
     public final RedisManagementService redisManagementService;
     public final ICategoryRepository categoryRepository;
+    public final FileStorageService fileStorageService;
 
     @Override
     @Transactional(readOnly = true)
@@ -104,6 +108,22 @@ public class ProductService implements IProductService {
         product.getCategories().addAll(categories);
         productRepository.save(product);
         redisManagementService.deleteKey(PRODUCT_CACHE + productReq.getId());
+        return new BaseResultDTO(ResultNotify.successUpdate, true, product);
+    }
+
+    @Override
+    public BaseResultDTO uploadProductImage(Long id, MultipartFile file) throws IOException {
+        Optional<Product> existing = productRepository.findById(id);
+        if (existing.isEmpty()) {
+            throw new RuntimeException("Không tìm thấy sản phẩm");
+        }
+        Product product = existing.get();
+        String oldImage = product.getImage();
+        String url = fileStorageService.store(file, "products");
+        product.setImage(url);
+        productRepository.save(product);
+        fileStorageService.delete(oldImage);
+        redisManagementService.deleteKey(PRODUCT_CACHE + id);
         return new BaseResultDTO(ResultNotify.successUpdate, true, product);
     }
 

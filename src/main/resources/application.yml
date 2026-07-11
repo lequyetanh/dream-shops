@@ -60,3 +60,6 @@ app:
   export:
     # Font Unicode dùng để render tiếng Việt khi xuất PDF. Đổi sang đường dẫn font trên server khi deploy (Linux, v.v.)
     pdf-font-path: ${PDF_FONT_PATH:C:/Windows/Fonts/arial.ttf}
+  upload:
+    # Thư mục lưu ảnh sản phẩm/avatar user, phục vụ qua /uploads/**
+    dir: ${UPLOAD_DIR:uploads}
