@@ -21,6 +21,11 @@ public interface IVoucherService {
     BaseResultDTO deleteVoucher(Long id);
 
     /**
+     * Validate a voucher code against an order amount and compute the discount, without consuming a usage slot.
+     */
+    BaseResultDTO checkVoucher(String code, Long companyId, BigDecimal orderAmount);
+
+    /**
      * Validate a voucher code against an order amount, compute the discount and consume one usage slot.
      */
     BaseResultDTO applyVoucher(String code, Long companyId, BigDecimal orderAmount);

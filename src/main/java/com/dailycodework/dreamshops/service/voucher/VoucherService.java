@@ -104,6 +104,25 @@ public class VoucherService implements IVoucherService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public BaseResultDTO checkVoucher(String code, Long companyId, BigDecimal orderAmount) {
+        Optional<Voucher> voucherOpt = voucherRepository.findByCodeAndCompanyId(code, companyId);
+        if (voucherOpt.isEmpty()) {
+            return new BaseResultDTO(ResultNotify.notFound, VoucherConstant.Message.NOT_FOUND, false);
+        }
+        Voucher voucher = voucherOpt.get();
+
+        String invalidReason = validate(voucher, orderAmount);
+        if (invalidReason != null) {
+            return new BaseResultDTO(ResultNotify.error, invalidReason, false);
+        }
+
+        BigDecimal discountAmount = calculateDiscount(voucher, orderAmount);
+        VoucherApplyResult result = new VoucherApplyResult(voucher.getId(), voucher.getCode(), voucher.getDiscountType(), discountAmount);
+        return new BaseResultDTO(ResultNotify.successGet, true, result);
+    }
+
+    @Override
     public BaseResultDTO applyVoucher(String code, Long companyId, BigDecimal orderAmount) {
         Optional<Voucher> voucherOpt = voucherRepository.findByCodeAndCompanyId(code, companyId);
         if (voucherOpt.isEmpty()) {
