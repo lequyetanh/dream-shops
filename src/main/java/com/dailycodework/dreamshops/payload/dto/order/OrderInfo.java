@@ -27,6 +27,8 @@ public class OrderInfo {
     private Long companyId;
     private Integer status;
     private String extra;
+    private Long voucherId;
+    private String voucherCode;
     List<OrderProductReq> products;
 
     OrderInfo(
@@ -41,7 +43,9 @@ public class OrderInfo {
             BigDecimal totalAmount,
             Long companyId,
             Integer status,
-            String extra
+            String extra,
+            Long voucherId,
+            String voucherCode
     ){
         this.id = id;
         this.code = code;
@@ -55,5 +59,7 @@ public class OrderInfo {
         this.companyId = companyId;
         this.status = status;
         this.extra = extra;
+        this.voucherId = voucherId;
+        this.voucherCode = voucherCode;
     }
 }

@@ -8,10 +8,12 @@ import com.dailycodework.dreamshops.entity.Order;
 import com.dailycodework.dreamshops.entity.OrderProduct;
 import com.dailycodework.dreamshops.entity.TaskLog;
 import com.dailycodework.dreamshops.payload.dto.taskLog.Content;
+import com.dailycodework.dreamshops.payload.dto.voucher.VoucherApplyResult;
 import com.dailycodework.dreamshops.rabbitmq.producer.OrderProducer;
 import com.dailycodework.dreamshops.repository.order.IOrderRepository;
 import com.dailycodework.dreamshops.repository.product.IProductRepository;
 import com.dailycodework.dreamshops.service.taskLog.TaskLogService;
+import com.dailycodework.dreamshops.service.voucher.IVoucherService;
 import com.dailycodework.dreamshops.util.Common;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -19,9 +21,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -33,6 +37,7 @@ public class OrderService implements IOrderService {
     private final OrderProducer orderProducer;
     private final TaskLogService taskLogService;
     private final OrderWebSocketService orderWebSocketService;
+    private final IVoucherService voucherService;
 
     @Override
     @Transactional(readOnly = true)
@@ -77,6 +82,20 @@ public class OrderService implements IOrderService {
         BeanUtils.copyProperties(orderReq, order);
         order.setProducts(productList);
         order.setOrderDate(orderReq.getOrderDate());
+
+        if (StringUtils.hasText(orderReq.getVoucherCode())) {
+            BaseResultDTO voucherResult = voucherService.applyVoucher(
+                    orderReq.getVoucherCode(), orderReq.getCompanyId(), orderReq.getTotalAmount()
+            );
+            if (!voucherResult.isStatus()) {
+                return voucherResult;
+            }
+            VoucherApplyResult applyResult = (VoucherApplyResult) voucherResult.getData();
+            order.setVoucherId(applyResult.getVoucherId());
+            order.setVoucherCode(applyResult.getCode());
+            order.setDiscountAmount(applyResult.getDiscountAmount());
+        }
+
         orderRepository.save(order);
 
         deductStock(orderReq.getProducts());
@@ -101,6 +120,25 @@ public class OrderService implements IOrderService {
         }
         Order order = existingOrderOpt.get();
 
+        String oldVoucherCode = order.getVoucherCode();
+        String newVoucherCode = orderReq.getVoucherCode();
+        boolean voucherChanged = !Objects.equals(oldVoucherCode, newVoucherCode);
+
+        VoucherApplyResult newVoucherApply = null;
+        if (voucherChanged && StringUtils.hasText(newVoucherCode)) {
+            BaseResultDTO voucherResult = voucherService.applyVoucher(
+                    newVoucherCode, orderReq.getCompanyId(), orderReq.getTotalAmount()
+            );
+            if (!voucherResult.isStatus()) {
+                return voucherResult;
+            }
+            newVoucherApply = (VoucherApplyResult) voucherResult.getData();
+        }
+
+        if (voucherChanged && order.getVoucherId() != null) {
+            voucherService.releaseVoucher(order.getVoucherId());
+        }
+
         restoreStock(order.getProducts());
         order.getProducts().clear();
 
@@ -123,6 +161,18 @@ public class OrderService implements IOrderService {
         order.setExtra(orderReq.getExtra());
         order.setOrderDate(orderReq.getOrderDate());
         order.getProducts().addAll(productList);
+
+        if (voucherChanged) {
+            if (newVoucherApply != null) {
+                order.setVoucherId(newVoucherApply.getVoucherId());
+                order.setVoucherCode(newVoucherApply.getCode());
+                order.setDiscountAmount(newVoucherApply.getDiscountAmount());
+            } else {
+                order.setVoucherId(null);
+                order.setVoucherCode(null);
+            }
+        }
+
         orderRepository.save(order);
 
         deductStock(orderReq.getProducts());
@@ -152,6 +202,9 @@ public class OrderService implements IOrderService {
         Optional<Order> existingOrderOpt = orderRepository.findById(id);
         existingOrderOpt.ifPresent(order -> {
             restoreStock(order.getProducts());
+            if (order.getVoucherId() != null) {
+                voucherService.releaseVoucher(order.getVoucherId());
+            }
             orderWebSocketService.notifyOrderDeleted(id, order.getCompanyId());
         });
         orderRepository.deleteById(id);

@@ -76,7 +76,9 @@ public class IOrderRepositoryImpl implements OrderRepositoryCustom {
                         "o.total_amount totalAmount, " +
                         "o.company_id companyId, " +
                         "o.status, " +
-                        "o.extra " +
+                        "o.extra, " +
+                        "o.voucher_id voucherId, " +
+                        "o.voucher_code voucherCode " +
                         "FROM orders o " +
                         "LEFT JOIN order_product op ON o.id = op.order_id " +
                         where +

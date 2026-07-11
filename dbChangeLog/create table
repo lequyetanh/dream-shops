@@ -135,3 +135,25 @@
 
 ALTER TABLE config
 ALTER COLUMN description NVARCHAR(500);
+
+CREATE TABLE voucher (
+    id                  BIGINT IDENTITY(1,1) PRIMARY KEY,
+    code                NVARCHAR(50)  NOT NULL UNIQUE,
+    name                NVARCHAR(255),
+    description         NVARCHAR(MAX),
+    discount_type       INT           NOT NULL, -- 1: PERCENT, 2: AMOUNT
+    discount_value      DECIMAL(19,2) NOT NULL,
+    min_order_amount    DECIMAL(19,2),
+    max_discount_amount DECIMAL(19,2),
+    start_date          DATETIMEOFFSET,
+    end_date            DATETIMEOFFSET,
+    usage_limit         INT,
+    used_count          INT DEFAULT 0,
+    status              INT,
+    company_id          BIGINT,
+    extra               NVARCHAR(MAX)
+);
+
+ALTER TABLE orders ADD voucher_id BIGINT NULL;
+ALTER TABLE orders ADD voucher_code NVARCHAR(50) NULL;
+ALTER TABLE orders ADD FOREIGN KEY (voucher_id) REFERENCES voucher(id);

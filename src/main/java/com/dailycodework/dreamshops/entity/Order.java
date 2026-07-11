@@ -35,7 +35,9 @@ import java.util.List;
                                                 @ColumnResult(name = "totalAmount", type = BigDecimal.class),
                                                 @ColumnResult(name = "companyId", type = Long.class),
                                                 @ColumnResult(name = "status", type = Integer.class),
-                                                @ColumnResult(name = "extra", type = String.class)
+                                                @ColumnResult(name = "extra", type = String.class),
+                                                @ColumnResult(name = "voucherId", type = Long.class),
+                                                @ColumnResult(name = "voucherCode", type = String.class)
                                         }
                                 )
                         }
@@ -84,6 +86,13 @@ public class Order {
 
     @Column(columnDefinition = "NVARCHAR(MAX)")
     private String extra;
+
+    @Column(name = "voucher_id")
+    private Long voucherId;
+
+    @Size(max = 50)
+    @Column(name = "voucher_code", length = 50)
+    private String voucherCode;
 
     public void setOrderDate(ZonedDateTime orderDate) {
         this.orderDate = orderDate;
