@@ -5,10 +5,16 @@ import com.dailycodework.dreamshops.payload.dto.order.OrderInfo;
 import com.dailycodework.dreamshops.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
@@ -75,5 +81,48 @@ public class Order {
     public ResponseEntity<BaseResultDTO> deleteOrder(@PathVariable(value = "id") Long id){
         BaseResultDTO result = orderService.deleteOrder(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // Nhập đơn hàng hàng loạt từ file Excel (mỗi dòng là một sản phẩm, các dòng cùng "Mã đơn hàng" được gộp thành 1 đơn)
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PostMapping(value = "/order/import-excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResultDTO> importOrdersFromExcel(@RequestParam("file") MultipartFile file) throws IOException {
+        BaseResultDTO result = orderService.importOrdersFromExcel(file);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    // Xuất danh sách đơn hàng (theo cùng bộ lọc với get-with-paging) ra file Excel
+    @GetMapping("/order/export-excel")
+    public ResponseEntity<byte[]> exportOrdersToExcel(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String fromDate,
+            @RequestParam(required = false) String toDate,
+            @RequestParam(required = false) String orderCode,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(required = false) Integer companyId
+    ) throws IOException {
+        byte[] content = orderService.exportOrdersToExcel(keyword, fromDate, toDate, orderCode, status, companyId);
+        return buildFileResponse(content, "orders.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    }
+
+    // Xuất danh sách đơn hàng (theo cùng bộ lọc với get-with-paging) ra file PDF
+    @GetMapping("/order/export-pdf")
+    public ResponseEntity<byte[]> exportOrdersToPdf(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String fromDate,
+            @RequestParam(required = false) String toDate,
+            @RequestParam(required = false) String orderCode,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(required = false) Integer companyId
+    ) throws IOException {
+        byte[] content = orderService.exportOrdersToPdf(keyword, fromDate, toDate, orderCode, status, companyId);
+        return buildFileResponse(content, "orders.pdf", MediaType.APPLICATION_PDF_VALUE);
+    }
+
+    private ResponseEntity<byte[]> buildFileResponse(byte[] content, String filename, String contentType) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDisposition(ContentDisposition.attachment().filename(filename).build());
+        headers.set(HttpHeaders.CONTENT_TYPE, contentType);
+        return new ResponseEntity<>(content, headers, HttpStatus.OK);
     }
 }

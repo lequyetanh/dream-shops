@@ -18,13 +18,22 @@ import com.dailycodework.dreamshops.util.Common;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -32,12 +41,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional
 public class OrderService implements IOrderService {
+    private static final int MAX_EXPORT_SIZE = 5000;
+
     private final IOrderRepository orderRepository;
     private final IProductRepository productRepository;
     private final OrderProducer orderProducer;
     private final TaskLogService taskLogService;
     private final OrderWebSocketService orderWebSocketService;
     private final IVoucherService voucherService;
+    private final OrderExcelService orderExcelService;
+    private final OrderPdfService orderPdfService;
+    private final PlatformTransactionManager transactionManager;
 
     @Override
     @Transactional(readOnly = true)
@@ -209,6 +223,93 @@ public class OrderService implements IOrderService {
         });
         orderRepository.deleteById(id);
         return new BaseResultDTO(ResultNotify.successDelete, true, null);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public BaseResultDTO importOrdersFromExcel(MultipartFile file) throws IOException {
+        List<OrderInfo> orders = orderExcelService.parseOrders(file);
+        if (orders.isEmpty()) {
+            return new BaseResultDTO(ResultNotify.error, "Không tìm thấy dữ liệu đơn hàng hợp lệ trong file", false);
+        }
+
+        TransactionTemplate transactionTemplate = new TransactionTemplate(transactionManager);
+        transactionTemplate.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+
+        List<Map<String, Object>> details = new ArrayList<>();
+        int successCount = 0;
+        for (OrderInfo orderInfo : orders) {
+            String invalidReason = validateImportedOrder(orderInfo);
+            if (invalidReason != null) {
+                details.add(importResult(orderInfo.getCode(), false, invalidReason));
+                continue;
+            }
+            try {
+                BaseResultDTO result = transactionTemplate.execute(status -> createOrder(orderInfo));
+                boolean success = result != null && result.isStatus();
+                if (success) successCount++;
+                details.add(importResult(
+                        orderInfo.getCode(), success, String.valueOf(result != null ? result.getMessage() : ResultNotify.error)
+                ));
+            } catch (Exception e) {
+                details.add(importResult(orderInfo.getCode(), false, e.getMessage()));
+            }
+        }
+
+        Map<String, Object> summary = new LinkedHashMap<>();
+        summary.put("total", orders.size());
+        summary.put("success", successCount);
+        summary.put("failed", orders.size() - successCount);
+        summary.put("details", details);
+
+        return new BaseResultDTO(ResultNotify.successCreate, true, summary);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public byte[] exportOrdersToExcel(
+            String keyword, String fromDate, String toDate, String orderCode, Integer status, Integer companyId
+    ) throws IOException {
+        List<OrderInfo> orders = fetchOrdersForExport(keyword, fromDate, toDate, orderCode, status, companyId);
+        return orderExcelService.exportOrders(orders);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public byte[] exportOrdersToPdf(
+            String keyword, String fromDate, String toDate, String orderCode, Integer status, Integer companyId
+    ) throws IOException {
+        List<OrderInfo> orders = fetchOrdersForExport(keyword, fromDate, toDate, orderCode, status, companyId);
+        return orderPdfService.exportOrders(orders);
+    }
+
+    private List<OrderInfo> fetchOrdersForExport(
+            String keyword, String fromDate, String toDate, String orderCode, Integer status, Integer companyId
+    ) {
+        Page<OrderInfo> page = orderRepository.getOrderWithPaging(
+                PageRequest.of(0, MAX_EXPORT_SIZE), keyword, fromDate, toDate, orderCode, status, companyId
+        );
+        return page.getContent();
+    }
+
+    private Map<String, Object> importResult(String code, boolean success, String message) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("code", code);
+        result.put("success", success);
+        result.put("message", message);
+        return result;
+    }
+
+    private String validateImportedOrder(OrderInfo orderInfo) {
+        if (!StringUtils.hasText(orderInfo.getCode())) return "Thiếu mã đơn hàng";
+        if (orderInfo.getCustomerId() == null) return "Thiếu mã khách hàng";
+        if (orderInfo.getCompanyId() == null) return "Thiếu mã công ty";
+        if (orderInfo.getProducts() == null || orderInfo.getProducts().isEmpty()) return "Đơn hàng không có sản phẩm";
+        for (OrderProductReq prod : orderInfo.getProducts()) {
+            if (prod.getProductId() == null) return "Thiếu mã sản phẩm";
+            if (prod.getPrice() == null || prod.getQuantity() == null) return "Thiếu đơn giá hoặc số lượng sản phẩm";
+        }
+        return null;
     }
 
     private void deductStock(List<OrderProductReq> products) {
