@@ -2,6 +2,8 @@ package com.dailycodework.dreamshops.payload.dto.order;
 
 import com.dailycodework.dreamshops.payload.dto.orderProduct.OrderProductReq;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,8 @@ public class OrderInfo {
     private String extra;
     private Long voucherId;
     private String voucherCode;
+    @JacksonXmlElementWrapper(localName = "products")
+    @JacksonXmlProperty(localName = "product")
     List<OrderProductReq> products;
 
     OrderInfo(

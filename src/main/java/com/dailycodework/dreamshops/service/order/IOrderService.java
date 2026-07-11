@@ -30,4 +30,7 @@ public interface IOrderService {
     public byte[] exportOrdersToPdf(
             String keyword, String fromDate, String toDate, String orderCode, Integer status, Integer companyId
     ) throws IOException;
+    public byte[] exportOrdersToXml(
+            String keyword, String fromDate, String toDate, String orderCode, Integer status, Integer companyId
+    ) throws IOException;
 }

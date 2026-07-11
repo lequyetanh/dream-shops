@@ -51,6 +51,7 @@ public class OrderService implements IOrderService {
     private final IVoucherService voucherService;
     private final OrderExcelService orderExcelService;
     private final OrderPdfService orderPdfService;
+    private final OrderXmlService orderXmlService;
     private final PlatformTransactionManager transactionManager;
 
     @Override
@@ -281,6 +282,15 @@ public class OrderService implements IOrderService {
     ) throws IOException {
         List<OrderInfo> orders = fetchOrdersForExport(keyword, fromDate, toDate, orderCode, status, companyId);
         return orderPdfService.exportOrders(orders);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public byte[] exportOrdersToXml(
+            String keyword, String fromDate, String toDate, String orderCode, Integer status, Integer companyId
+    ) throws IOException {
+        List<OrderInfo> orders = fetchOrdersForExport(keyword, fromDate, toDate, orderCode, status, companyId);
+        return orderXmlService.exportOrders(orders);
     }
 
     private List<OrderInfo> fetchOrdersForExport(

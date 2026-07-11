@@ -119,6 +119,20 @@ public class Order {
         return buildFileResponse(content, "orders.pdf", MediaType.APPLICATION_PDF_VALUE);
     }
 
+    // Xuất danh sách đơn hàng (theo cùng bộ lọc với get-with-paging) ra file XML
+    @GetMapping("/order/export-xml")
+    public ResponseEntity<byte[]> exportOrdersToXml(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String fromDate,
+            @RequestParam(required = false) String toDate,
+            @RequestParam(required = false) String orderCode,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(required = false) Integer companyId
+    ) throws IOException {
+        byte[] content = orderService.exportOrdersToXml(keyword, fromDate, toDate, orderCode, status, companyId);
+        return buildFileResponse(content, "orders.xml", MediaType.APPLICATION_XML_VALUE);
+    }
+
     private ResponseEntity<byte[]> buildFileResponse(byte[] content, String filename, String contentType) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentDisposition(ContentDisposition.attachment().filename(filename).build());
