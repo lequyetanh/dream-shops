@@ -1,5 +1,7 @@
 package com.dailycodework.dreamshops.controller;
 
+import com.dailycodework.dreamshops.aop.WriteSystemLog;
+import com.dailycodework.dreamshops.constant.SystemLogConstant;
 import com.dailycodework.dreamshops.payload.dto.BaseResultDTO;
 import com.dailycodework.dreamshops.payload.dto.product.ProductInfo;
 import com.dailycodework.dreamshops.service.product.IProductService;
@@ -20,6 +22,7 @@ public class Product {
 
     @PreAuthorize("hasAuthority('PRODUCT_VIEW')")
     @GetMapping("/product/get-with-paging")
+    @WriteSystemLog(type = SystemLogConstant.Type.PRODUCT)
     public ResponseEntity<BaseResultDTO> getProductWithPaging(
             Pageable pageable,
             @RequestParam(required = false) String keyword,
